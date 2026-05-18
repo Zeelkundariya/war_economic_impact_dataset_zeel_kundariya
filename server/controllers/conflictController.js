@@ -643,6 +643,66 @@ const filterConflictsByHighInflation = async (req, res) => {
   }
 };
 
+// Fetch low inflation conflicts
+const filterConflictsByLowInflation = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Inflation_Rate_Percentage: { $lt: parseFloat(req.query.inflationBelow) },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Fetch conflicts with high GDP loss
+const filterConflictsByHighGDPLoss = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      GDP_Change_Percentage: { $lt: -parseFloat(req.query.gdpLossAbove) },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Fetch conflicts with high poverty
+const filterConflictsByHighPoverty = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      During_War_Poverty_Rate_Percentage: { $gt: parseFloat(req.query.povertyAbove) },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Fetch high food insecurity conflicts
+const filterConflictsByHighFoodInsecurity = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Food_Insecurity_Rate_Percentage: { $gt: parseFloat(req.query.foodInsecurityAbove) },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Fetch high currency gap conflicts
+const filterConflictsByHighCurrencyGap = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Currency_Gap_Percentage: { $gt: parseFloat(req.query.currencyGapAbove) },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getConflicts,
   getConflictById,
@@ -693,4 +753,9 @@ module.exports = {
   filterConflictsByCountry,
   filterConflictsByType,
   filterConflictsByHighInflation,
+  filterConflictsByLowInflation,
+  filterConflictsByHighGDPLoss,
+  filterConflictsByHighPoverty,
+  filterConflictsByHighFoodInsecurity,
+  filterConflictsByHighCurrencyGap,
 };
