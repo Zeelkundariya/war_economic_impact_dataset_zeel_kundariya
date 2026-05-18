@@ -354,7 +354,7 @@ const getLatestRegionalConflict = async (req, res) => {
     const conflict = await Conflict.findOne({
       Region: { $regex: req.params.region, $options: 'i' },
     }).sort({ Start_Year: -1 });
-    
+
     if (conflict) {
       res.json(conflict);
     } else {
