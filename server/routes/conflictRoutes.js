@@ -50,6 +50,11 @@ const {
   filterConflictsByCountry,
   filterConflictsByType,
   filterConflictsByHighInflation,
+  filterConflictsByLowInflation,
+  filterConflictsByHighGDPLoss,
+  filterConflictsByHighPoverty,
+  filterConflictsByHighFoodInsecurity,
+  filterConflictsByHighCurrencyGap,
 } = require('../controllers/conflictController');
 const { protect, admin } = require('../middlewares/authMiddleware');
 
@@ -58,6 +63,11 @@ const { protect, admin } = require('../middlewares/authMiddleware');
 // Filter conflicts by country
 // Filter conflicts by type
 // Fetch high inflation conflicts
+// Fetch low inflation conflicts
+// Fetch conflicts with high GDP loss
+// Fetch conflicts with high poverty
+// Fetch high food insecurity conflicts
+// Fetch high currency gap conflicts
 const handleQueryRoute = (req, res, next) => {
   if (req.query.status) {
     return filterConflictsByStatus(req, res);
@@ -73,6 +83,21 @@ const handleQueryRoute = (req, res, next) => {
   }
   if (req.query.inflationAbove) {
     return filterConflictsByHighInflation(req, res);
+  }
+  if (req.query.inflationBelow) {
+    return filterConflictsByLowInflation(req, res);
+  }
+  if (req.query.gdpLossAbove) {
+    return filterConflictsByHighGDPLoss(req, res);
+  }
+  if (req.query.povertyAbove) {
+    return filterConflictsByHighPoverty(req, res);
+  }
+  if (req.query.foodInsecurityAbove) {
+    return filterConflictsByHighFoodInsecurity(req, res);
+  }
+  if (req.query.currencyGapAbove) {
+    return filterConflictsByHighCurrencyGap(req, res);
   }
   next();
 };
