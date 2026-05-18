@@ -583,6 +583,66 @@ const getWarUnemploymentImpact = async (req, res) => {
   }
 };
 
+// Filter ongoing conflicts
+const filterConflictsByStatus = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Status: { $regex: req.query.status, $options: 'i' },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Filter conflicts by region
+const filterConflictsByRegion = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Region: { $regex: req.query.region, $options: 'i' },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Filter conflicts by country
+const filterConflictsByCountry = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Primary_Country: { $regex: req.query.country, $options: 'i' },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Filter conflicts by type
+const filterConflictsByType = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Conflict_Type: { $regex: req.query.type, $options: 'i' },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Fetch high inflation conflicts
+const filterConflictsByHighInflation = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Inflation_Rate_Percentage: { $gt: parseFloat(req.query.inflationAbove) },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getConflicts,
   getConflictById,
@@ -628,4 +688,9 @@ module.exports = {
   getWarReconstructionDetails,
   getWarCurrencyCrisis,
   getWarUnemploymentImpact,
+  filterConflictsByStatus,
+  filterConflictsByRegion,
+  filterConflictsByCountry,
+  filterConflictsByType,
+  filterConflictsByHighInflation,
 };

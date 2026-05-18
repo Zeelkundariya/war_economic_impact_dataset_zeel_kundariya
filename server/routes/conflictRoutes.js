@@ -45,10 +45,39 @@ const {
   getWarReconstructionDetails,
   getWarCurrencyCrisis,
   getWarUnemploymentImpact,
+  filterConflictsByStatus,
+  filterConflictsByRegion,
+  filterConflictsByCountry,
+  filterConflictsByType,
+  filterConflictsByHighInflation,
 } = require('../controllers/conflictController');
 const { protect, admin } = require('../middlewares/authMiddleware');
 
-router.route('/').get(getConflicts).post(protect, createConflict);
+// Filter ongoing conflicts
+// Filter conflicts by region
+// Filter conflicts by country
+// Filter conflicts by type
+// Fetch high inflation conflicts
+const handleQueryRoute = (req, res, next) => {
+  if (req.query.status) {
+    return filterConflictsByStatus(req, res);
+  }
+  if (req.query.region) {
+    return filterConflictsByRegion(req, res);
+  }
+  if (req.query.country) {
+    return filterConflictsByCountry(req, res);
+  }
+  if (req.query.type) {
+    return filterConflictsByType(req, res);
+  }
+  if (req.query.inflationAbove) {
+    return filterConflictsByHighInflation(req, res);
+  }
+  next();
+};
+
+router.route('/').get(handleQueryRoute, getConflicts).post(protect, createConflict);
 
 router
   .route('/:conflictId')
