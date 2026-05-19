@@ -703,6 +703,66 @@ const filterConflictsByHighCurrencyGap = async (req, res) => {
   }
 };
 
+// Fetch expensive wars
+const filterConflictsByHighWarCost = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Cost_of_War_USD: { $gt: parseFloat(req.query.warCostAbove) },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Fetch costly reconstruction conflicts
+const filterConflictsByHighReconstructionCost = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Estimated_Reconstruction_Cost_USD: { $gt: parseFloat(req.query.reconstructionAbove) },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Filter conflicts by sector
+const filterConflictsBySectorQuery = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Most_Affected_Sector: { $regex: req.query.sector, $options: 'i' },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Fetch high black market conflicts
+const filterConflictsByBlackMarketQuery = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Black_Market_Activity_Level: { $regex: req.query.blackMarket, $options: 'i' },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Fetch profiteering conflicts
+const filterConflictsByProfiteeringQuery = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      War_Profiteering_Instances: { $regex: req.query.profiteering, $options: 'i' },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getConflicts,
   getConflictById,
@@ -758,4 +818,9 @@ module.exports = {
   filterConflictsByHighPoverty,
   filterConflictsByHighFoodInsecurity,
   filterConflictsByHighCurrencyGap,
+  filterConflictsByHighWarCost,
+  filterConflictsByHighReconstructionCost,
+  filterConflictsBySectorQuery,
+  filterConflictsByBlackMarketQuery,
+  filterConflictsByProfiteeringQuery,
 };

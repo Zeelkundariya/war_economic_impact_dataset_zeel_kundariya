@@ -55,49 +55,74 @@ const {
   filterConflictsByHighPoverty,
   filterConflictsByHighFoodInsecurity,
   filterConflictsByHighCurrencyGap,
+  filterConflictsByHighWarCost,
+  filterConflictsByHighReconstructionCost,
+  filterConflictsBySectorQuery,
+  filterConflictsByBlackMarketQuery,
+  filterConflictsByProfiteeringQuery,
 } = require('../controllers/conflictController');
 const { protect, admin } = require('../middlewares/authMiddleware');
 
-// Filter ongoing conflicts
-// Filter conflicts by region
-// Filter conflicts by country
-// Filter conflicts by type
-// Fetch high inflation conflicts
-// Fetch low inflation conflicts
-// Fetch conflicts with high GDP loss
-// Fetch conflicts with high poverty
-// Fetch high food insecurity conflicts
-// Fetch high currency gap conflicts
 const handleQueryRoute = (req, res, next) => {
+  // Filter ongoing conflicts
   if (req.query.status) {
     return filterConflictsByStatus(req, res);
   }
+  // Filter conflicts by region
   if (req.query.region) {
     return filterConflictsByRegion(req, res);
   }
+  // Filter conflicts by country
   if (req.query.country) {
     return filterConflictsByCountry(req, res);
   }
+  // Filter conflicts by type
   if (req.query.type) {
     return filterConflictsByType(req, res);
   }
+  // Fetch high inflation conflicts
   if (req.query.inflationAbove) {
     return filterConflictsByHighInflation(req, res);
   }
+  // Fetch low inflation conflicts
   if (req.query.inflationBelow) {
     return filterConflictsByLowInflation(req, res);
   }
+  // Fetch conflicts with high GDP loss
   if (req.query.gdpLossAbove) {
     return filterConflictsByHighGDPLoss(req, res);
   }
+  // Fetch conflicts with high poverty
   if (req.query.povertyAbove) {
     return filterConflictsByHighPoverty(req, res);
   }
+  // Fetch high food insecurity conflicts
   if (req.query.foodInsecurityAbove) {
     return filterConflictsByHighFoodInsecurity(req, res);
   }
+  // Fetch high currency gap conflicts
   if (req.query.currencyGapAbove) {
     return filterConflictsByHighCurrencyGap(req, res);
+  }
+  // Fetch expensive wars
+  if (req.query.warCostAbove) {
+    return filterConflictsByHighWarCost(req, res);
+  }
+  // Fetch costly reconstruction conflicts
+  if (req.query.reconstructionAbove) {
+    return filterConflictsByHighReconstructionCost(req, res);
+  }
+  // Filter conflicts by sector
+  if (req.query.sector) {
+    return filterConflictsBySectorQuery(req, res);
+  }
+  // Fetch high black market conflicts
+  if (req.query.blackMarket) {
+    return filterConflictsByBlackMarketQuery(req, res);
+  }
+  // Fetch profiteering conflicts
+  if (req.query.profiteering) {
+    return filterConflictsByProfiteeringQuery(req, res);
   }
   next();
 };
