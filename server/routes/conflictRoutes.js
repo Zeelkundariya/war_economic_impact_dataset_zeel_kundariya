@@ -55,6 +55,11 @@ const {
   filterConflictsByHighPoverty,
   filterConflictsByHighFoodInsecurity,
   filterConflictsByHighCurrencyGap,
+  filterConflictsByHighWarCost,
+  filterConflictsByHighReconstructionCost,
+  filterConflictsBySectorQuery,
+  filterConflictsByBlackMarketQuery,
+  filterConflictsByProfiteeringQuery,
 } = require('../controllers/conflictController');
 const { protect, admin } = require('../middlewares/authMiddleware');
 
@@ -68,6 +73,11 @@ const { protect, admin } = require('../middlewares/authMiddleware');
 // Fetch conflicts with high poverty
 // Fetch high food insecurity conflicts
 // Fetch high currency gap conflicts
+// Fetch expensive wars
+// Fetch costly reconstruction conflicts
+// Filter conflicts by sector
+// Fetch high black market conflicts
+// Fetch profiteering conflicts
 const handleQueryRoute = (req, res, next) => {
   if (req.query.status) {
     return filterConflictsByStatus(req, res);
@@ -98,6 +108,21 @@ const handleQueryRoute = (req, res, next) => {
   }
   if (req.query.currencyGapAbove) {
     return filterConflictsByHighCurrencyGap(req, res);
+  }
+  if (req.query.warCostAbove) {
+    return filterConflictsByHighWarCost(req, res);
+  }
+  if (req.query.reconstructionAbove) {
+    return filterConflictsByHighReconstructionCost(req, res);
+  }
+  if (req.query.sector) {
+    return filterConflictsBySectorQuery(req, res);
+  }
+  if (req.query.blackMarket) {
+    return filterConflictsByBlackMarketQuery(req, res);
+  }
+  if (req.query.profiteering) {
+    return filterConflictsByProfiteeringQuery(req, res);
   }
   next();
 };
