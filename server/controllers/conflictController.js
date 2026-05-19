@@ -825,6 +825,76 @@ const filterConflictsByRegionAndTypeQuery = async (req, res) => {
   }
 };
 
+// Fetch conflicts within inflation range
+const filterConflictsByInflationRangeQuery = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Inflation_Rate_Percentage: {
+        $gte: parseFloat(req.query.minInflation),
+        $lte: parseFloat(req.query.maxInflation),
+      },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Fetch conflicts within GDP loss range
+const filterConflictsByGDPRangeQuery = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      GDP_Change_Percentage: {
+        $gte: parseFloat(req.query.minGDP),
+        $lte: parseFloat(req.query.maxGDP),
+      },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Fetch conflicts within poverty range
+const filterConflictsByPovertyRangeQuery = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      During_War_Poverty_Rate_Percentage: {
+        $gte: parseFloat(req.query.minPoverty),
+        $lte: parseFloat(req.query.maxPoverty),
+      },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Fetch conflicts within unemployment range
+const filterConflictsByUnemploymentRangeQuery = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      During_War_Unemployment_Percentage: {
+        $gte: parseFloat(req.query.minUnemployment),
+        $lte: parseFloat(req.query.maxUnemployment),
+      },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Sort conflicts by inflation
+const sortConflictsByInflationQuery = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({}).sort({ Inflation_Rate_Percentage: 1 });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getConflicts,
   getConflictById,
@@ -890,4 +960,9 @@ module.exports = {
   filterConflictsByEndYearQuery,
   filterConflictsByCountryAndStatusQuery,
   filterConflictsByRegionAndTypeQuery,
+  filterConflictsByInflationRangeQuery,
+  filterConflictsByGDPRangeQuery,
+  filterConflictsByPovertyRangeQuery,
+  filterConflictsByUnemploymentRangeQuery,
+  sortConflictsByInflationQuery,
 };
