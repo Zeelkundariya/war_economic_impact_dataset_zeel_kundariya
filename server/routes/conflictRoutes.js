@@ -63,78 +63,143 @@ const {
 } = require('../controllers/conflictController');
 const { protect, admin } = require('../middlewares/authMiddleware');
 
-const handleQueryRoute = (req, res, next) => {
-  // Filter ongoing conflicts
+// Filter ongoing conflicts
+router.get('/', (req, res, next) => {
   if (req.query.status) {
     return filterConflictsByStatus(req, res);
   }
-  // Filter conflicts by region
+  next();
+});
+
+// Filter conflicts by region
+router.get('/', (req, res, next) => {
   if (req.query.region) {
     return filterConflictsByRegion(req, res);
   }
-  // Filter conflicts by country
+  next();
+});
+
+// Filter conflicts by country
+router.get('/', (req, res, next) => {
   if (req.query.country) {
     return filterConflictsByCountry(req, res);
   }
-  // Filter conflicts by type
+  next();
+});
+
+// Filter conflicts by type
+router.get('/', (req, res, next) => {
   if (req.query.type) {
     return filterConflictsByType(req, res);
   }
-  // Fetch high inflation conflicts
+  next();
+});
+
+// Fetch high inflation conflicts
+router.get('/', (req, res, next) => {
   if (req.query.inflationAbove) {
     return filterConflictsByHighInflation(req, res);
   }
-  // Fetch low inflation conflicts
+  next();
+});
+
+// Fetch low inflation conflicts
+router.get('/', (req, res, next) => {
   if (req.query.inflationBelow) {
     return filterConflictsByLowInflation(req, res);
   }
-  // Fetch conflicts with high GDP loss
+  next();
+});
+
+// Fetch conflicts with high GDP loss
+router.get('/', (req, res, next) => {
   if (req.query.gdpLossAbove) {
     return filterConflictsByHighGDPLoss(req, res);
   }
-  // Fetch conflicts with high poverty
+  next();
+});
+
+// Fetch conflicts with high poverty
+router.get('/', (req, res, next) => {
   if (req.query.povertyAbove) {
     return filterConflictsByHighPoverty(req, res);
   }
-  // Fetch high food insecurity conflicts
+  next();
+});
+
+// Fetch high food insecurity conflicts
+router.get('/', (req, res, next) => {
   if (req.query.foodInsecurityAbove) {
     return filterConflictsByHighFoodInsecurity(req, res);
   }
-  // Fetch high currency gap conflicts
+  next();
+});
+
+// Fetch high currency gap conflicts
+router.get('/', (req, res, next) => {
   if (req.query.currencyGapAbove) {
     return filterConflictsByHighCurrencyGap(req, res);
   }
-  // Fetch expensive wars
+  next();
+});
+
+// Fetch expensive wars
+router.get('/', (req, res, next) => {
   if (req.query.warCostAbove) {
     return filterConflictsByHighWarCost(req, res);
   }
-  // Fetch costly reconstruction conflicts
+  next();
+});
+
+// Fetch costly reconstruction conflicts
+router.get('/', (req, res, next) => {
   if (req.query.reconstructionAbove) {
     return filterConflictsByHighReconstructionCost(req, res);
   }
-  // Filter conflicts by sector
+  next();
+});
+
+// Filter conflicts by sector
+router.get('/', (req, res, next) => {
   if (req.query.sector) {
     return filterConflictsBySectorQuery(req, res);
   }
-  // Fetch high black market conflicts
+  next();
+});
+
+// Fetch high black market conflicts
+router.get('/', (req, res, next) => {
   if (req.query.blackMarket) {
     return filterConflictsByBlackMarketQuery(req, res);
   }
-  // Fetch profiteering conflicts
+  next();
+});
+
+// Fetch profiteering conflicts
+router.get('/', (req, res, next) => {
   if (req.query.profiteering) {
     return filterConflictsByProfiteeringQuery(req, res);
   }
   next();
-};
+});
 
-router.route('/').get(handleQueryRoute, getConflicts).post(protect, createConflict);
+// Fetch all conflicts
+router.get('/', getConflicts);
 
-router
-  .route('/:conflictId')
-  .get(getConflictById)
-  .put(protect, updateConflict)
-  .patch(protect, updateConflict)
-  .delete(protect, deleteConflict);
+// Create new conflict
+router.post('/', protect, createConflict);
+
+// Fetch conflict by ID
+router.get('/:conflictId', getConflictById);
+
+// Replace conflict data
+router.put('/:conflictId', protect, updateConflict);
+
+// Update conflict details
+router.patch('/:conflictId', protect, updateConflict);
+
+// Delete conflict
+router.delete('/:conflictId', protect, deleteConflict);
 
 // Fetch conflicts by name
 router.get('/name/:name', getConflictsByName);
