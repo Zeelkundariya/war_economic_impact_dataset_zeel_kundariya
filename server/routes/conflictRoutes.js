@@ -70,6 +70,10 @@ const {
   filterConflictsByPovertyRangeQuery,
   filterConflictsByUnemploymentRangeQuery,
   sortConflictsByInflationQuery,
+  sortConflictsByGDPLossQuery,
+  sortConflictsByStartYearQuery,
+  sortConflictsByReconstructionCostQuery,
+  searchConflictsByKeywordQuery,
 } = require('../controllers/conflictController');
 const { protect, admin } = require('../middlewares/authMiddleware');
 
@@ -267,8 +271,40 @@ router.get('/', (req, res, next) => {
 
 // Sort conflicts by inflation
 router.get('/', (req, res, next) => {
-  if (req.query.sort) {
+  if (req.query.sort === 'Inflation_Rate_%') {
     return sortConflictsByInflationQuery(req, res);
+  }
+  next();
+});
+
+// Sort conflicts descending by GDP change
+router.get('/', (req, res, next) => {
+  if (req.query.sort === '-GDP_Change_%') {
+    return sortConflictsByGDPLossQuery(req, res);
+  }
+  next();
+});
+
+// Sort conflicts by start year
+router.get('/', (req, res, next) => {
+  if (req.query.sort === 'Start_Year') {
+    return sortConflictsByStartYearQuery(req, res);
+  }
+  next();
+});
+
+// Sort by reconstruction cost
+router.get('/', (req, res, next) => {
+  if (req.query.sort === '-Estimated_Reconstruction_Cost_USD') {
+    return sortConflictsByReconstructionCostQuery(req, res);
+  }
+  next();
+});
+
+// Search conflicts by keyword
+router.get('/', (req, res, next) => {
+  if (req.query.keyword) {
+    return searchConflictsByKeywordQuery(req, res);
   }
   next();
 });

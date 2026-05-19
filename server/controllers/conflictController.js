@@ -895,6 +895,54 @@ const sortConflictsByInflationQuery = async (req, res) => {
   }
 };
 
+// Sort conflicts descending by GDP change
+const sortConflictsByGDPLossQuery = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({}).sort({ GDP_Change_Percentage: -1 });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Sort conflicts by start year
+const sortConflictsByStartYearQuery = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({}).sort({ Start_Year: 1 });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Sort by reconstruction cost
+const sortConflictsByReconstructionCostQuery = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({}).sort({ Estimated_Reconstruction_Cost_USD: -1 });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Search conflicts by keyword
+const searchConflictsByKeywordQuery = async (req, res) => {
+  try {
+    const keyword = req.query.keyword;
+    const conflicts = await Conflict.find({
+      $or: [
+        { Conflict_Name: { $regex: keyword, $options: 'i' } },
+        { Primary_Country: { $regex: keyword, $options: 'i' } },
+        { Region: { $regex: keyword, $options: 'i' } },
+        { Conflict_Type: { $regex: keyword, $options: 'i' } },
+      ],
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getConflicts,
   getConflictById,
@@ -965,4 +1013,8 @@ module.exports = {
   filterConflictsByPovertyRangeQuery,
   filterConflictsByUnemploymentRangeQuery,
   sortConflictsByInflationQuery,
+  sortConflictsByGDPLossQuery,
+  sortConflictsByStartYearQuery,
+  sortConflictsByReconstructionCostQuery,
+  searchConflictsByKeywordQuery,
 };
