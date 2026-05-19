@@ -60,6 +60,11 @@ const {
   filterConflictsBySectorQuery,
   filterConflictsByBlackMarketQuery,
   filterConflictsByProfiteeringQuery,
+  filterConflictsByYearQuery,
+  filterConflictsByStartYearQuery,
+  filterConflictsByEndYearQuery,
+  filterConflictsByCountryAndStatusQuery,
+  filterConflictsByRegionAndTypeQuery,
 } = require('../controllers/conflictController');
 const { protect, admin } = require('../middlewares/authMiddleware');
 
@@ -179,6 +184,46 @@ router.get('/', (req, res, next) => {
 router.get('/', (req, res, next) => {
   if (req.query.profiteering) {
     return filterConflictsByProfiteeringQuery(req, res);
+  }
+  next();
+});
+
+// Fetch conflicts by year
+router.get('/', (req, res, next) => {
+  if (req.query.year) {
+    return filterConflictsByYearQuery(req, res);
+  }
+  next();
+});
+
+// Fetch conflicts by start year
+router.get('/', (req, res, next) => {
+  if (req.query.startYear) {
+    return filterConflictsByStartYearQuery(req, res);
+  }
+  next();
+});
+
+// Fetch conflicts by end year
+router.get('/', (req, res, next) => {
+  if (req.query.endYear) {
+    return filterConflictsByEndYearQuery(req, res);
+  }
+  next();
+});
+
+// Fetch ongoing Ukraine conflicts
+router.get('/', (req, res, next) => {
+  if (req.query.country && req.query.status) {
+    return filterConflictsByCountryAndStatusQuery(req, res);
+  }
+  next();
+});
+
+// Fetch Middle East civil wars
+router.get('/', (req, res, next) => {
+  if (req.query.region && req.query.type) {
+    return filterConflictsByRegionAndTypeQuery(req, res);
   }
   next();
 });
