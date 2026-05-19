@@ -65,6 +65,11 @@ const {
   filterConflictsByEndYearQuery,
   filterConflictsByCountryAndStatusQuery,
   filterConflictsByRegionAndTypeQuery,
+  filterConflictsByInflationRangeQuery,
+  filterConflictsByGDPRangeQuery,
+  filterConflictsByPovertyRangeQuery,
+  filterConflictsByUnemploymentRangeQuery,
+  sortConflictsByInflationQuery,
 } = require('../controllers/conflictController');
 const { protect, admin } = require('../middlewares/authMiddleware');
 
@@ -224,6 +229,46 @@ router.get('/', (req, res, next) => {
 router.get('/', (req, res, next) => {
   if (req.query.region && req.query.type) {
     return filterConflictsByRegionAndTypeQuery(req, res);
+  }
+  next();
+});
+
+// Fetch conflicts within inflation range
+router.get('/', (req, res, next) => {
+  if (req.query.minInflation && req.query.maxInflation) {
+    return filterConflictsByInflationRangeQuery(req, res);
+  }
+  next();
+});
+
+// Fetch conflicts within GDP loss range
+router.get('/', (req, res, next) => {
+  if (req.query.minGDP && req.query.maxGDP) {
+    return filterConflictsByGDPRangeQuery(req, res);
+  }
+  next();
+});
+
+// Fetch conflicts within poverty range
+router.get('/', (req, res, next) => {
+  if (req.query.minPoverty && req.query.maxPoverty) {
+    return filterConflictsByPovertyRangeQuery(req, res);
+  }
+  next();
+});
+
+// Fetch conflicts within unemployment range
+router.get('/', (req, res, next) => {
+  if (req.query.minUnemployment && req.query.maxUnemployment) {
+    return filterConflictsByUnemploymentRangeQuery(req, res);
+  }
+  next();
+});
+
+// Sort conflicts by inflation
+router.get('/', (req, res, next) => {
+  if (req.query.sort) {
+    return sortConflictsByInflationQuery(req, res);
   }
   next();
 });
