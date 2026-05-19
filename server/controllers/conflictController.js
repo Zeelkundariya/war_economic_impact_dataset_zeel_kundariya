@@ -763,6 +763,68 @@ const filterConflictsByProfiteeringQuery = async (req, res) => {
   }
 };
 
+// Fetch conflicts by year
+const filterConflictsByYearQuery = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Start_Year: { $regex: req.query.year, $options: 'i' },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Fetch conflicts by start year
+const filterConflictsByStartYearQuery = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Start_Year: { $regex: req.query.startYear, $options: 'i' },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Fetch conflicts by end year
+const filterConflictsByEndYearQuery = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      End_Year: { $regex: req.query.endYear, $options: 'i' },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Fetch ongoing Ukraine conflicts
+const filterConflictsByCountryAndStatusQuery = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Primary_Country: { $regex: req.query.country, $options: 'i' },
+      Status: { $regex: req.query.status, $options: 'i' },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Fetch Middle East civil wars
+const filterConflictsByRegionAndTypeQuery = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Region: { $regex: req.query.region, $options: 'i' },
+      Conflict_Type: { $regex: req.query.type, $options: 'i' },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getConflicts,
   getConflictById,
@@ -823,4 +885,9 @@ module.exports = {
   filterConflictsBySectorQuery,
   filterConflictsByBlackMarketQuery,
   filterConflictsByProfiteeringQuery,
+  filterConflictsByYearQuery,
+  filterConflictsByStartYearQuery,
+  filterConflictsByEndYearQuery,
+  filterConflictsByCountryAndStatusQuery,
+  filterConflictsByRegionAndTypeQuery,
 };
