@@ -78,6 +78,11 @@ const {
   paginateOngoingConflictsQuery,
   paginateResolvedConflictsQuery,
   paginateEuropeConflictsQuery,
+  paginateAsiaConflictsQuery,
+  paginateHighInflationConflictsQuery,
+  paginateHighPovertyConflictsQuery,
+  paginateHighGDPLossConflictsQuery,
+  paginateHighBlackMarketConflictsQuery,
 } = require('../controllers/conflictController');
 const { protect, admin } = require('../middlewares/authMiddleware');
 
@@ -329,6 +334,21 @@ router.get('/resolved', paginateResolvedConflictsQuery);
 
 // Paginate Europe conflicts
 router.get('/europe', paginateEuropeConflictsQuery);
+
+// Paginate Asia conflicts
+router.get('/asia', paginateAsiaConflictsQuery);
+
+// Paginate high inflation conflicts
+router.get('/high-inflation', paginateHighInflationConflictsQuery);
+
+// Paginate high poverty conflicts
+router.get('/high-poverty', paginateHighPovertyConflictsQuery);
+
+// Paginate high GDP loss conflicts
+router.get('/high-gdp-loss', paginateHighGDPLossConflictsQuery);
+
+// Paginate high black market conflicts
+router.get('/black-market/high', paginateHighBlackMarketConflictsQuery);
 
 // Fetch all conflicts
 router.get('/', getConflicts);
