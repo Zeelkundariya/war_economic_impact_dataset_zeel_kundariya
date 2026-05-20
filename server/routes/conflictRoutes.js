@@ -83,6 +83,8 @@ const {
   paginateHighPovertyConflictsQuery,
   paginateHighGDPLossConflictsQuery,
   paginateHighBlackMarketConflictsQuery,
+  searchGeneralConflictsQuery,
+  searchConflictsByCountryQuery,
 } = require('../controllers/conflictController');
 const { protect, admin } = require('../middlewares/authMiddleware');
 
@@ -349,6 +351,12 @@ router.get('/high-gdp-loss', paginateHighGDPLossConflictsQuery);
 
 // Paginate high black market conflicts
 router.get('/black-market/high', paginateHighBlackMarketConflictsQuery);
+
+// Search general conflicts by keyword
+router.get('/search', searchGeneralConflictsQuery);
+
+// Search conflicts by country
+router.get('/search/conflicts', searchConflictsByCountryQuery);
 
 // Fetch all conflicts
 router.get('/', getConflicts);
