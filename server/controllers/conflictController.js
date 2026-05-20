@@ -1075,6 +1075,37 @@ const paginateHighBlackMarketConflictsQuery = async (req, res) => {
   }
 };
 
+// Search general conflicts by keyword
+const searchGeneralConflictsQuery = async (req, res) => {
+  try {
+    const keyword = req.query.keyword;
+    const conflicts = await Conflict.find({
+      $or: [
+        { Conflict_Name: { $regex: keyword, $options: 'i' } },
+        { Primary_Country: { $regex: keyword, $options: 'i' } },
+        { Region: { $regex: keyword, $options: 'i' } },
+        { Conflict_Type: { $regex: keyword, $options: 'i' } },
+      ],
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Search conflicts by country
+const searchConflictsByCountryQuery = async (req, res) => {
+  try {
+    const country = req.query.country;
+    const conflicts = await Conflict.find({
+      Primary_Country: { $regex: country, $options: 'i' },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getConflicts,
   getConflictById,
@@ -1158,4 +1189,6 @@ module.exports = {
   paginateHighPovertyConflictsQuery,
   paginateHighGDPLossConflictsQuery,
   paginateHighBlackMarketConflictsQuery,
+  searchGeneralConflictsQuery,
+  searchConflictsByCountryQuery,
 };
