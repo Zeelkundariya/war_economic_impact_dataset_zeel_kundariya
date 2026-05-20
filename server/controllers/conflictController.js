@@ -1000,6 +1000,80 @@ const paginateEuropeConflictsQuery = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// Paginate Asia conflicts
+const paginateAsiaConflictsQuery = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const conflicts = await Conflict.find({ Region: { $regex: 'Asia', $options: 'i' } })
+      .skip(skip)
+      .limit(limit);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Paginate high inflation conflicts
+const paginateHighInflationConflictsQuery = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const conflicts = await Conflict.find({ Inflation_Rate_Percentage: { $gte: 50 } })
+      .skip(skip)
+      .limit(limit);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Paginate high poverty conflicts
+const paginateHighPovertyConflictsQuery = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const conflicts = await Conflict.find({ During_War_Poverty_Rate_Percentage: { $gte: 25 } })
+      .skip(skip)
+      .limit(limit);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Paginate high GDP loss conflicts
+const paginateHighGDPLossConflictsQuery = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const conflicts = await Conflict.find({ GDP_Change_Percentage: { $lt: -30 } })
+      .skip(skip)
+      .limit(limit);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Paginate high black market conflicts
+const paginateHighBlackMarketConflictsQuery = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const conflicts = await Conflict.find({ Black_Market_Activity_Level: { $regex: 'High', $options: 'i' } })
+      .skip(skip)
+      .limit(limit);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 module.exports = {
   getConflicts,
@@ -1079,4 +1153,9 @@ module.exports = {
   paginateOngoingConflictsQuery,
   paginateResolvedConflictsQuery,
   paginateEuropeConflictsQuery,
+  paginateAsiaConflictsQuery,
+  paginateHighInflationConflictsQuery,
+  paginateHighPovertyConflictsQuery,
+  paginateHighGDPLossConflictsQuery,
+  paginateHighBlackMarketConflictsQuery,
 };
