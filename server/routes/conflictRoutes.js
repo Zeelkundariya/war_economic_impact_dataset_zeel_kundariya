@@ -74,6 +74,10 @@ const {
   sortConflictsByStartYearQuery,
   sortConflictsByReconstructionCostQuery,
   searchConflictsByKeywordQuery,
+  paginateConflictsQuery,
+  paginateOngoingConflictsQuery,
+  paginateResolvedConflictsQuery,
+  paginateEuropeConflictsQuery,
 } = require('../controllers/conflictController');
 const { protect, admin } = require('../middlewares/authMiddleware');
 
@@ -308,6 +312,23 @@ router.get('/', (req, res, next) => {
   }
   next();
 });
+
+// Paginate conflicts
+router.get('/', (req, res, next) => {
+  if (req.query.page || req.query.limit) {
+    return paginateConflictsQuery(req, res);
+  }
+  next();
+});
+
+// Paginate ongoing conflicts
+router.get('/ongoing', paginateOngoingConflictsQuery);
+
+// Paginate resolved conflicts
+router.get('/resolved', paginateResolvedConflictsQuery);
+
+// Paginate Europe conflicts
+router.get('/europe', paginateEuropeConflictsQuery);
 
 // Fetch all conflicts
 router.get('/', getConflicts);

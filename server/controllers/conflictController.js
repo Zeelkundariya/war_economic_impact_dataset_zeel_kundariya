@@ -943,6 +943,64 @@ const searchConflictsByKeywordQuery = async (req, res) => {
   }
 };
 
+// Paginate conflicts
+const paginateConflictsQuery = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const conflicts = await Conflict.find({}).skip(skip).limit(limit);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Paginate ongoing conflicts
+const paginateOngoingConflictsQuery = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const conflicts = await Conflict.find({ Status: { $regex: 'Ongoing', $options: 'i' } })
+      .skip(skip)
+      .limit(limit);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Paginate resolved conflicts
+const paginateResolvedConflictsQuery = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const conflicts = await Conflict.find({ Status: { $regex: 'Resolved', $options: 'i' } })
+      .skip(skip)
+      .limit(limit);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Paginate Europe conflicts
+const paginateEuropeConflictsQuery = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const conflicts = await Conflict.find({ Region: { $regex: 'Europe', $options: 'i' } })
+      .skip(skip)
+      .limit(limit);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getConflicts,
   getConflictById,
@@ -1017,4 +1075,8 @@ module.exports = {
   sortConflictsByStartYearQuery,
   sortConflictsByReconstructionCostQuery,
   searchConflictsByKeywordQuery,
+  paginateConflictsQuery,
+  paginateOngoingConflictsQuery,
+  paginateResolvedConflictsQuery,
+  paginateEuropeConflictsQuery,
 };
