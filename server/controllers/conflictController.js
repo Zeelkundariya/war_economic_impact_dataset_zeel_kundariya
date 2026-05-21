@@ -1106,6 +1106,71 @@ const searchConflictsByCountryQuery = async (req, res) => {
   }
 };
 
+// Search Africa conflicts (Search conflicts by region)
+const searchConflictsByRegionQuery = async (req, res) => {
+  try {
+    const region = req.query.region;
+    const conflicts = await Conflict.find({
+      Region: { $regex: region, $options: 'i' },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Search civil wars (Search conflicts by type)
+const searchConflictsByTypeQuery = async (req, res) => {
+  try {
+    const type = req.query.type;
+    const conflicts = await Conflict.find({
+      Conflict_Type: { $regex: type, $options: 'i' },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Search resolved conflicts (Search conflicts by status)
+const searchConflictsByStatusQuery = async (req, res) => {
+  try {
+    const status = req.query.status;
+    const conflicts = await Conflict.find({
+      Status: { $regex: status, $options: 'i' },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Search high inflation conflicts (Search economic by inflation)
+const searchEconomicByInflationQuery = async (req, res) => {
+  try {
+    const inflation = parseFloat(req.query.inflation);
+    const conflicts = await Conflict.find({
+      Inflation_Rate_Percentage: { $gte: inflation },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Search poverty impact (Search economic by poverty)
+const searchEconomicByPovertyQuery = async (req, res) => {
+  try {
+    const poverty = parseFloat(req.query.poverty);
+    const conflicts = await Conflict.find({
+      During_War_Poverty_Rate_Percentage: { $gte: poverty },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getConflicts,
   getConflictById,
@@ -1191,4 +1256,9 @@ module.exports = {
   paginateHighBlackMarketConflictsQuery,
   searchGeneralConflictsQuery,
   searchConflictsByCountryQuery,
+  searchConflictsByRegionQuery,
+  searchConflictsByTypeQuery,
+  searchConflictsByStatusQuery,
+  searchEconomicByInflationQuery,
+  searchEconomicByPovertyQuery,
 };
