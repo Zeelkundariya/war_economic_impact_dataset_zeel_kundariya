@@ -85,6 +85,11 @@ const {
   paginateHighBlackMarketConflictsQuery,
   searchGeneralConflictsQuery,
   searchConflictsByCountryQuery,
+  searchConflictsByRegionQuery,
+  searchConflictsByTypeQuery,
+  searchConflictsByStatusQuery,
+  searchEconomicByInflationQuery,
+  searchEconomicByPovertyQuery,
 } = require('../controllers/conflictController');
 const { protect, admin } = require('../middlewares/authMiddleware');
 
@@ -354,6 +359,46 @@ router.get('/black-market/high', paginateHighBlackMarketConflictsQuery);
 
 // Search general conflicts by keyword
 router.get('/search', searchGeneralConflictsQuery);
+
+// Search Africa conflicts
+router.get('/search/conflicts', (req, res, next) => {
+  if (req.query.region) {
+    return searchConflictsByRegionQuery(req, res);
+  }
+  next();
+});
+
+// Search civil wars
+router.get('/search/conflicts', (req, res, next) => {
+  if (req.query.type) {
+    return searchConflictsByTypeQuery(req, res);
+  }
+  next();
+});
+
+// Search resolved conflicts
+router.get('/search/conflicts', (req, res, next) => {
+  if (req.query.status) {
+    return searchConflictsByStatusQuery(req, res);
+  }
+  next();
+});
+
+// Search high inflation conflicts
+router.get('/search/economic', (req, res, next) => {
+  if (req.query.inflation) {
+    return searchEconomicByInflationQuery(req, res);
+  }
+  next();
+});
+
+// Search poverty impact
+router.get('/search/economic', (req, res, next) => {
+  if (req.query.poverty) {
+    return searchEconomicByPovertyQuery(req, res);
+  }
+  next();
+});
 
 // Search conflicts by country
 router.get('/search/conflicts', searchConflictsByCountryQuery);
