@@ -1223,6 +1223,82 @@ const searchBlackMarketByGoodsQuery = async (req, res) => {
   }
 };
 
+// Combined: Ongoing conflicts sorted by inflation with pagination
+const getCombinedOngoingInflationQuery = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const conflicts = await Conflict.find({
+      Status: { $regex: 'Ongoing', $options: 'i' },
+    })
+      .sort({ Inflation_Rate_Percentage: -1 })
+      .skip(skip)
+      .limit(limit);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Combined: Europe conflicts with pagination
+const getCombinedEuropePaginatedQuery = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const conflicts = await Conflict.find({
+      Region: { $regex: 'Europe', $options: 'i' },
+    })
+      .skip(skip)
+      .limit(limit);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Combined: Japan conflicts sorted by GDP loss
+const getCombinedJapanGDPLossQuery = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Primary_Country: { $regex: 'Japan', $options: 'i' },
+    }).sort({ GDP_Change_Percentage: -1 });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Combined: World War conflicts with pagination
+const getCombinedWorldWarPaginatedQuery = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const conflicts = await Conflict.find({
+      Conflict_Type: { $regex: 'World War', $options: 'i' },
+    })
+      .skip(skip)
+      .limit(limit);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Combined: High black market conflicts sorted by currency gap
+const getCombinedBlackMarketCurrencyQuery = async (req, res) => {
+  try {
+    const conflicts = await Conflict.find({
+      Black_Market_Activity_Level: { $regex: 'High', $options: 'i' },
+    }).sort({ Currency_Gap_Percentage: -1 });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getConflicts,
   getConflictById,
@@ -1317,4 +1393,9 @@ module.exports = {
   searchEconomicByCurrencyQuery,
   searchSectorByNameQuery,
   searchBlackMarketByGoodsQuery,
+  getCombinedOngoingInflationQuery,
+  getCombinedEuropePaginatedQuery,
+  getCombinedJapanGDPLossQuery,
+  getCombinedWorldWarPaginatedQuery,
+  getCombinedBlackMarketCurrencyQuery,
 };
