@@ -90,6 +90,10 @@ const {
   searchConflictsByStatusQuery,
   searchEconomicByInflationQuery,
   searchEconomicByPovertyQuery,
+  searchEconomicByGDPLossQuery,
+  searchEconomicByCurrencyQuery,
+  searchSectorByNameQuery,
+  searchBlackMarketByGoodsQuery,
 } = require('../controllers/conflictController');
 const { protect, admin } = require('../middlewares/authMiddleware');
 
@@ -396,6 +400,38 @@ router.get('/search/economic', (req, res, next) => {
 router.get('/search/economic', (req, res, next) => {
   if (req.query.poverty) {
     return searchEconomicByPovertyQuery(req, res);
+  }
+  next();
+});
+
+// Search GDP loss
+router.get('/search/economic', (req, res, next) => {
+  if (req.query.gdp) {
+    return searchEconomicByGDPLossQuery(req, res);
+  }
+  next();
+});
+
+// Search currency crisis
+router.get('/search/economic', (req, res, next) => {
+  if (req.query.currency) {
+    return searchEconomicByCurrencyQuery(req, res);
+  }
+  next();
+});
+
+// Search sector by name
+router.get('/search/sector', (req, res, next) => {
+  if (req.query.name) {
+    return searchSectorByNameQuery(req, res);
+  }
+  next();
+});
+
+// Search black market by goods
+router.get('/search/black-market', (req, res, next) => {
+  if (req.query.goods) {
+    return searchBlackMarketByGoodsQuery(req, res);
   }
   next();
 });

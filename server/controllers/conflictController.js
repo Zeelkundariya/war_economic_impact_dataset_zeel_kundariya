@@ -1171,6 +1171,58 @@ const searchEconomicByPovertyQuery = async (req, res) => {
   }
 };
 
+// Search GDP loss (Search economic by GDP)
+const searchEconomicByGDPLossQuery = async (req, res) => {
+  try {
+    const gdp = parseFloat(req.query.gdp);
+    const conflicts = await Conflict.find({
+      GDP_Change_Percentage: { $lte: gdp },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Search currency crisis (Search economic by currency)
+const searchEconomicByCurrencyQuery = async (req, res) => {
+  try {
+    const currency = parseFloat(req.query.currency);
+    const conflicts = await Conflict.find({
+      Currency_Gap_Percentage: { $gte: currency },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Search sector by name (Search affected sector)
+const searchSectorByNameQuery = async (req, res) => {
+  try {
+    const name = req.query.name;
+    const conflicts = await Conflict.find({
+      Most_Affected_Sector: { $regex: name, $options: 'i' },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Search black market by goods (Search black market goods)
+const searchBlackMarketByGoodsQuery = async (req, res) => {
+  try {
+    const goods = req.query.goods;
+    const conflicts = await Conflict.find({
+      Most_Traded_Black_Market_Goods: { $regex: goods, $options: 'i' },
+    });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getConflicts,
   getConflictById,
@@ -1261,4 +1313,8 @@ module.exports = {
   searchConflictsByStatusQuery,
   searchEconomicByInflationQuery,
   searchEconomicByPovertyQuery,
+  searchEconomicByGDPLossQuery,
+  searchEconomicByCurrencyQuery,
+  searchSectorByNameQuery,
+  searchBlackMarketByGoodsQuery,
 };
