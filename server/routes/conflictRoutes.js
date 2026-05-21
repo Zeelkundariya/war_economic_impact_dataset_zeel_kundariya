@@ -94,8 +94,53 @@ const {
   searchEconomicByCurrencyQuery,
   searchSectorByNameQuery,
   searchBlackMarketByGoodsQuery,
+  getCombinedOngoingInflationQuery,
+  getCombinedEuropePaginatedQuery,
+  getCombinedJapanGDPLossQuery,
+  getCombinedWorldWarPaginatedQuery,
+  getCombinedBlackMarketCurrencyQuery,
 } = require('../controllers/conflictController');
 const { protect, admin } = require('../middlewares/authMiddleware');
+
+// Fetch ongoing conflicts sorted by inflation with pagination
+router.get('/', (req, res, next) => {
+  if (req.query.status === 'Ongoing' && (req.query.page || req.query.limit) && req.query.sort === '-Inflation_Rate_%') {
+    return getCombinedOngoingInflationQuery(req, res);
+  }
+  next();
+});
+
+// Fetch paginated Europe conflicts
+router.get('/', (req, res, next) => {
+  if (req.query.region === 'Europe' && (req.query.page || req.query.limit)) {
+    return getCombinedEuropePaginatedQuery(req, res);
+  }
+  next();
+});
+
+// Fetch Japan conflicts sorted by GDP loss
+router.get('/', (req, res, next) => {
+  if (req.query.country === 'Japan' && req.query.sort === '-GDP_Change_%') {
+    return getCombinedJapanGDPLossQuery(req, res);
+  }
+  next();
+});
+
+// Fetch paginated world wars
+router.get('/', (req, res, next) => {
+  if (req.query.type === 'World War' && (req.query.page || req.query.limit)) {
+    return getCombinedWorldWarPaginatedQuery(req, res);
+  }
+  next();
+});
+
+// Fetch black market conflicts sorted by currency gap
+router.get('/', (req, res, next) => {
+  if (req.query.blackMarket === 'High' && req.query.sort === '-Currency_Black_Market_Rate_Gap_%') {
+    return getCombinedBlackMarketCurrencyQuery(req, res);
+  }
+  next();
+});
 
 // Filter ongoing conflicts
 router.get('/', (req, res, next) => {
