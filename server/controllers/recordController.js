@@ -2,6 +2,11 @@ const Region = require('../models/regionModel');
 const Country = require('../models/countryModel');
 const EconomicRecord = require('../models/economicRecordModel');
 const PovertyRecord = require('../models/povertyRecordModel');
+const InflationRecord = require('../models/inflationRecordModel');
+const BlackMarketRecord = require('../models/blackMarketRecordModel');
+const WarCostRecord = require('../models/warCostRecordModel');
+const ReconstructionRecord = require('../models/reconstructionRecordModel');
+const UnemploymentRecord = require('../models/unemploymentRecordModel');
 
 // Create Region
 const createRegion = async (req, res) => {
@@ -43,9 +48,64 @@ const createPovertyRecord = async (req, res) => {
   }
 };
 
+// Create Inflation Record
+const createInflationRecord = async (req, res) => {
+  try {
+    const record = await InflationRecord.create(req.body);
+    res.status(201).json(record);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// Create Black Market Record
+const createBlackMarketRecord = async (req, res) => {
+  try {
+    const record = await BlackMarketRecord.create(req.body);
+    res.status(201).json(record);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// Create War Cost Record
+const createWarCostRecord = async (req, res) => {
+  try {
+    const record = await WarCostRecord.create(req.body);
+    res.status(201).json(record);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// Create Reconstruction Record
+const createReconstructionRecord = async (req, res) => {
+  try {
+    const record = await ReconstructionRecord.create(req.body);
+    res.status(201).json(record);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// Create Unemployment Record
+const createUnemploymentRecord = async (req, res) => {
+  try {
+    const record = await UnemploymentRecord.create(req.body);
+    res.status(201).json(record);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createRegion,
   createCountry,
   createEconomicRecord,
   createPovertyRecord,
+  createInflationRecord,
+  createBlackMarketRecord,
+  createWarCostRecord,
+  createReconstructionRecord,
+  createUnemploymentRecord,
 };
