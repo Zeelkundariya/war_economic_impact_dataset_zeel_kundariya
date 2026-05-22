@@ -26,7 +26,20 @@ app.get('/', (req, res) => {
   res.send('API is running...');
 });
 
+// Versioned API Routes
 app.use('/api/v1/conflicts', require('./routes/conflictRoutes'));
+app.use('/api/v1/regions', require('./routes/regionRoutes'));
+app.use('/api/v1/countries', require('./routes/countryRoutes'));
+app.use('/api/v1/economic-records', require('./routes/economicRecordRoutes'));
+app.use('/api/v1/poverty-records', require('./routes/povertyRecordRoutes'));
+
+// Root Level Routes (for direct copy-paste flexibility)
+app.use('/conflicts', require('./routes/conflictRoutes'));
+app.use('/regions', require('./routes/regionRoutes'));
+app.use('/countries', require('./routes/countryRoutes'));
+app.use('/economic-records', require('./routes/economicRecordRoutes'));
+app.use('/poverty-records', require('./routes/povertyRecordRoutes'));
+
 app.use('/api/v1/auth', require('./routes/authRoutes'));
 
 app.use(errorHandler);
