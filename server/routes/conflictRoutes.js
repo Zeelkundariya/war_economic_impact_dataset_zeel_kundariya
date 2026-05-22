@@ -533,7 +533,7 @@ router.get('/search/conflicts', searchConflictsByCountryQuery);
 router.get('/', getConflicts);
 
 // Create new conflict
-router.post('/', protect, createConflict);
+router.post('/', createConflict);
 
 // Fetch conflict by ID
 router.get('/:conflictId', getConflictById);
