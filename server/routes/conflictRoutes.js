@@ -99,6 +99,11 @@ const {
   getCombinedJapanGDPLossQuery,
   getCombinedWorldWarPaginatedQuery,
   getCombinedBlackMarketCurrencyQuery,
+  getCombinedHighInflationQuery,
+  getCombinedHighPovertyQuery,
+  getCombinedEnergySectorQuery,
+  getCombinedProfiteeringQuery,
+  getCombinedUkraineOngoingQuery,
 } = require('../controllers/conflictController');
 const { protect, admin } = require('../middlewares/authMiddleware');
 
@@ -138,6 +143,46 @@ router.get('/', (req, res, next) => {
 router.get('/', (req, res, next) => {
   if (req.query.blackMarket === 'High' && req.query.sort === '-Currency_Black_Market_Rate_Gap_%') {
     return getCombinedBlackMarketCurrencyQuery(req, res);
+  }
+  next();
+});
+
+// Fetch high inflation conflicts
+router.get('/', (req, res, next) => {
+  if (req.query.inflationAbove && (req.query.page || req.query.limit)) {
+    return getCombinedHighInflationQuery(req, res);
+  }
+  next();
+});
+
+// Fetch high poverty conflicts
+router.get('/', (req, res, next) => {
+  if (req.query.povertyAbove && req.query.sort === '-Extreme_Poverty_Rate_%') {
+    return getCombinedHighPovertyQuery(req, res);
+  }
+  next();
+});
+
+// Fetch energy sector conflicts
+router.get('/', (req, res, next) => {
+  if (req.query.sector && (req.query.page || req.query.limit)) {
+    return getCombinedEnergySectorQuery(req, res);
+  }
+  next();
+});
+
+// Fetch profiteering conflicts
+router.get('/', (req, res, next) => {
+  if (req.query.profiteering && req.query.sort === '-Cost_of_War_USD') {
+    return getCombinedProfiteeringQuery(req, res);
+  }
+  next();
+});
+
+// Fetch Ukraine ongoing conflicts
+router.get('/', (req, res, next) => {
+  if (req.query.country === 'Ukraine' && req.query.status === 'Ongoing' && (req.query.page || req.query.limit)) {
+    return getCombinedUkraineOngoingQuery(req, res);
   }
   next();
 });

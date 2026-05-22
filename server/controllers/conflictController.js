@@ -1299,6 +1299,93 @@ const getCombinedBlackMarketCurrencyQuery = async (req, res) => {
   }
 };
 
+// Combined: Fetch high inflation conflicts with pagination
+const getCombinedHighInflationQuery = async (req, res) => {
+  try {
+    const inflationAbove = parseFloat(req.query.inflationAbove) || 0;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const conflicts = await Conflict.find({
+      Inflation_Rate_Percentage: { $gt: inflationAbove }
+    })
+      .skip(skip)
+      .limit(limit);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Combined: Fetch high poverty conflicts sorted descending by Extreme Poverty Rate
+const getCombinedHighPovertyQuery = async (req, res) => {
+  try {
+    const povertyAbove = parseFloat(req.query.povertyAbove) || 0;
+    const conflicts = await Conflict.find({
+      During_War_Poverty_Rate_Percentage: { $gt: povertyAbove }
+    })
+      .sort({ Extreme_Poverty_Rate_Percentage: -1 });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Combined: Fetch sector conflicts with pagination
+const getCombinedEnergySectorQuery = async (req, res) => {
+  try {
+    const sector = req.query.sector;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const conflicts = await Conflict.find({
+      Most_Affected_Sector: { $regex: sector, $options: 'i' }
+    })
+      .skip(skip)
+      .limit(limit);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Combined: Fetch profiteering conflicts sorted descending by Cost of War
+const getCombinedProfiteeringQuery = async (req, res) => {
+  try {
+    const profiteering = req.query.profiteering;
+    const conflicts = await Conflict.find({
+      War_Profiteering_Instances: { $regex: profiteering, $options: 'i' }
+    })
+      .sort({ Cost_of_War_USD: -1 });
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Combined: Fetch Ukraine ongoing conflicts with pagination
+const getCombinedUkraineOngoingQuery = async (req, res) => {
+  try {
+    const country = req.query.country;
+    const status = req.query.status;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const skip = (page - 1) * limit;
+
+    const conflicts = await Conflict.find({
+      Primary_Country: { $regex: country, $options: 'i' },
+      Status: { $regex: status, $options: 'i' }
+    })
+      .skip(skip)
+      .limit(limit);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getConflicts,
   getConflictById,
@@ -1398,4 +1485,9 @@ module.exports = {
   getCombinedJapanGDPLossQuery,
   getCombinedWorldWarPaginatedQuery,
   getCombinedBlackMarketCurrencyQuery,
+  getCombinedHighInflationQuery,
+  getCombinedHighPovertyQuery,
+  getCombinedEnergySectorQuery,
+  getCombinedProfiteeringQuery,
+  getCombinedUkraineOngoingQuery,
 };
