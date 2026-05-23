@@ -205,6 +205,76 @@ const deletePovertyRecord = async (req, res) => {
   }
 };
 
+// Delete Black Market Record
+const deleteBlackMarketRecord = async (req, res) => {
+  try {
+    const record = await BlackMarketRecord.findByIdAndDelete(req.params.recordId);
+    if (record) {
+      res.json({ message: 'Black market record removed' });
+    } else {
+      res.status(404).json({ message: 'Black market record not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Delete War Cost Record
+const deleteWarCostRecord = async (req, res) => {
+  try {
+    const record = await WarCostRecord.findByIdAndDelete(req.params.recordId);
+    if (record) {
+      res.json({ message: 'War cost record removed' });
+    } else {
+      res.status(404).json({ message: 'War cost record not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Delete Reconstruction Record
+const deleteReconstructionRecord = async (req, res) => {
+  try {
+    const record = await ReconstructionRecord.findByIdAndDelete(req.params.recordId);
+    if (record) {
+      res.json({ message: 'Reconstruction record removed' });
+    } else {
+      res.status(404).json({ message: 'Reconstruction record not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Delete Inflation Record
+const deleteInflationRecord = async (req, res) => {
+  try {
+    const record = await InflationRecord.findByIdAndDelete(req.params.recordId);
+    if (record) {
+      res.json({ message: 'Inflation record removed' });
+    } else {
+      res.status(404).json({ message: 'Inflation record not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Delete Unemployment Record
+const deleteUnemploymentRecord = async (req, res) => {
+  try {
+    const record = await UnemploymentRecord.findByIdAndDelete(req.params.recordId);
+    if (record) {
+      res.json({ message: 'Unemployment record removed' });
+    } else {
+      res.status(404).json({ message: 'Unemployment record not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createRegion,
   deleteRegion,
@@ -217,11 +287,17 @@ module.exports = {
   createPovertyRecord,
   deletePovertyRecord,
   createInflationRecord,
+  deleteInflationRecord,
   createBlackMarketRecord,
+  deleteBlackMarketRecord,
   createWarCostRecord,
+  deleteWarCostRecord,
   createReconstructionRecord,
   updateReconstructionRecord,
+  deleteReconstructionRecord,
   createUnemploymentRecord,
+  deleteUnemploymentRecord,
 };
+
 
 
