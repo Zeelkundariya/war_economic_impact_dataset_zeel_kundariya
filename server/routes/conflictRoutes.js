@@ -6,6 +6,11 @@ const {
   createConflict,
   updateConflict,
   updateConflictStatus,
+  updateConflictInflation,
+  updateConflictGDP,
+  updateConflictPoverty,
+  updateConflictUnemployment,
+  updateConflictSector,
   deleteConflict,
   getConflictsByName,
   getConflictsByType,
@@ -547,6 +552,22 @@ router.patch('/:conflictId', updateConflict);
 
 // Update conflict status
 router.patch('/:conflictId/status', updateConflictStatus);
+
+// Update conflict inflation
+router.patch('/:conflictId/inflation', updateConflictInflation);
+
+// Update conflict GDP
+router.patch('/:conflictId/gdp', updateConflictGDP);
+
+// Update conflict poverty
+router.patch('/:conflictId/poverty', updateConflictPoverty);
+
+// Update conflict unemployment
+router.patch('/:conflictId/unemployment', updateConflictUnemployment);
+
+// Update conflict sector
+router.patch('/:conflictId/sector', updateConflictSector);
+
 
 
 // Delete conflict
