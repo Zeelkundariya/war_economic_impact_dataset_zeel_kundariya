@@ -72,6 +72,164 @@ const updateConflictStatus = async (req, res) => {
   }
 };
 
+// Update Conflict Inflation
+const updateConflictInflation = async (req, res) => {
+  try {
+    const { inflationRatePercentage, Inflation_Rate_Percentage } = req.body;
+    const rate = Inflation_Rate_Percentage !== undefined ? Inflation_Rate_Percentage : inflationRatePercentage;
+    
+    if (rate === undefined) {
+      return res.status(400).json({ message: 'Inflation rate is required' });
+    }
+
+    const conflict = await Conflict.findByIdAndUpdate(
+      req.params.conflictId,
+      { Inflation_Rate_Percentage: rate },
+      { new: true, runValidators: true }
+    );
+
+    if (conflict) {
+      res.json(conflict);
+    } else {
+      res.status(404).json({ message: 'Conflict not found' });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// Update Conflict GDP
+const updateConflictGDP = async (req, res) => {
+  try {
+    const { gdpChangePercentage, GDP_Change_Percentage } = req.body;
+    const change = GDP_Change_Percentage !== undefined ? GDP_Change_Percentage : gdpChangePercentage;
+
+    if (change === undefined) {
+      return res.status(400).json({ message: 'GDP change percentage is required' });
+    }
+
+    const conflict = await Conflict.findByIdAndUpdate(
+      req.params.conflictId,
+      { GDP_Change_Percentage: change },
+      { new: true, runValidators: true }
+    );
+
+    if (conflict) {
+      res.json(conflict);
+    } else {
+      res.status(404).json({ message: 'Conflict not found' });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// Update Conflict Poverty
+const updateConflictPoverty = async (req, res) => {
+  try {
+    const {
+      povertyRate,
+      During_War_Poverty_Rate_Percentage,
+      extremePovertyRate,
+      Extreme_Poverty_Rate_Percentage,
+      foodInsecurityRate,
+      Food_Insecurity_Rate_Percentage
+    } = req.body;
+
+    const updateFields = {};
+    if (During_War_Poverty_Rate_Percentage !== undefined) updateFields.During_War_Poverty_Rate_Percentage = During_War_Poverty_Rate_Percentage;
+    else if (povertyRate !== undefined) updateFields.During_War_Poverty_Rate_Percentage = povertyRate;
+
+    if (Extreme_Poverty_Rate_Percentage !== undefined) updateFields.Extreme_Poverty_Rate_Percentage = Extreme_Poverty_Rate_Percentage;
+    else if (extremePovertyRate !== undefined) updateFields.Extreme_Poverty_Rate_Percentage = extremePovertyRate;
+
+    if (Food_Insecurity_Rate_Percentage !== undefined) updateFields.Food_Insecurity_Rate_Percentage = Food_Insecurity_Rate_Percentage;
+    else if (foodInsecurityRate !== undefined) updateFields.Food_Insecurity_Rate_Percentage = foodInsecurityRate;
+
+    if (Object.keys(updateFields).length === 0) {
+      return res.status(400).json({ message: 'At least one poverty/food insecurity field is required' });
+    }
+
+    const conflict = await Conflict.findByIdAndUpdate(
+      req.params.conflictId,
+      updateFields,
+      { new: true, runValidators: true }
+    );
+
+    if (conflict) {
+      res.json(conflict);
+    } else {
+      res.status(404).json({ message: 'Conflict not found' });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// Update Conflict Unemployment
+const updateConflictUnemployment = async (req, res) => {
+  try {
+    const {
+      unemploymentPercentage,
+      During_War_Unemployment_Percentage,
+      youthUnemploymentChangePercentage,
+      Youth_Unemployment_Change_Percentage
+    } = req.body;
+
+    const updateFields = {};
+    if (During_War_Unemployment_Percentage !== undefined) updateFields.During_War_Unemployment_Percentage = During_War_Unemployment_Percentage;
+    else if (unemploymentPercentage !== undefined) updateFields.During_War_Unemployment_Percentage = unemploymentPercentage;
+
+    if (Youth_Unemployment_Change_Percentage !== undefined) updateFields.Youth_Unemployment_Change_Percentage = Youth_Unemployment_Change_Percentage;
+    else if (youthUnemploymentChangePercentage !== undefined) updateFields.Youth_Unemployment_Change_Percentage = youthUnemploymentChangePercentage;
+
+    if (Object.keys(updateFields).length === 0) {
+      return res.status(400).json({ message: 'At least one unemployment field is required' });
+    }
+
+    const conflict = await Conflict.findByIdAndUpdate(
+      req.params.conflictId,
+      updateFields,
+      { new: true, runValidators: true }
+    );
+
+    if (conflict) {
+      res.json(conflict);
+    } else {
+      res.status(404).json({ message: 'Conflict not found' });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// Update Conflict Sector
+const updateConflictSector = async (req, res) => {
+  try {
+    const { sector, Most_Affected_Sector } = req.body;
+    const updateSector = Most_Affected_Sector !== undefined ? Most_Affected_Sector : sector;
+
+    if (updateSector === undefined) {
+      return res.status(400).json({ message: 'Affected sector is required' });
+    }
+
+    const conflict = await Conflict.findByIdAndUpdate(
+      req.params.conflictId,
+      { Most_Affected_Sector: updateSector },
+      { new: true, runValidators: true }
+    );
+
+    if (conflict) {
+      res.json(conflict);
+    } else {
+      res.status(404).json({ message: 'Conflict not found' });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+
 
 const deleteConflict = async (req, res) => {
   try {
@@ -1418,6 +1576,11 @@ module.exports = {
   createConflict,
   updateConflict,
   updateConflictStatus,
+  updateConflictInflation,
+  updateConflictGDP,
+  updateConflictPoverty,
+  updateConflictUnemployment,
+  updateConflictSector,
   deleteConflict,
   getConflictsByName,
   getConflictsByType,
