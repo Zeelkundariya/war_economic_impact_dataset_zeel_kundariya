@@ -98,14 +98,69 @@ const createUnemploymentRecord = async (req, res) => {
   }
 };
 
+// Update Country
+const updateCountry = async (req, res) => {
+  try {
+    const country = await Country.findByIdAndUpdate(req.params.countryId, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (country) {
+      res.json(country);
+    } else {
+      res.status(404).json({ message: 'Country not found' });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// Update Economic Record
+const updateEconomicRecord = async (req, res) => {
+  try {
+    const record = await EconomicRecord.findByIdAndUpdate(req.params.recordId, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (record) {
+      res.json(record);
+    } else {
+      res.status(404).json({ message: 'Economic record not found' });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// Update Reconstruction Record
+const updateReconstructionRecord = async (req, res) => {
+  try {
+    const record = await ReconstructionRecord.findByIdAndUpdate(req.params.recordId, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (record) {
+      res.json(record);
+    } else {
+      res.status(404).json({ message: 'Reconstruction record not found' });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createRegion,
   createCountry,
+  updateCountry,
   createEconomicRecord,
+  updateEconomicRecord,
   createPovertyRecord,
   createInflationRecord,
   createBlackMarketRecord,
   createWarCostRecord,
   createReconstructionRecord,
+  updateReconstructionRecord,
   createUnemploymentRecord,
 };
+
