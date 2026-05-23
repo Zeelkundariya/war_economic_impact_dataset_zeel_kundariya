@@ -571,7 +571,7 @@ router.patch('/:conflictId/sector', updateConflictSector);
 
 
 // Delete conflict
-router.delete('/:conflictId', protect, deleteConflict);
+router.delete('/:conflictId', deleteConflict);
 
 // Fetch conflicts by name
 router.get('/name/:name', getConflictsByName);

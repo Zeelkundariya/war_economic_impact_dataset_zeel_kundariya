@@ -149,13 +149,73 @@ const updateReconstructionRecord = async (req, res) => {
   }
 };
 
+// Delete Region
+const deleteRegion = async (req, res) => {
+  try {
+    const region = await Region.findByIdAndDelete(req.params.regionId);
+    if (region) {
+      res.json({ message: 'Region removed' });
+    } else {
+      res.status(404).json({ message: 'Region not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Delete Country
+const deleteCountry = async (req, res) => {
+  try {
+    const country = await Country.findByIdAndDelete(req.params.countryId);
+    if (country) {
+      res.json({ message: 'Country removed' });
+    } else {
+      res.status(404).json({ message: 'Country not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Delete Economic Record
+const deleteEconomicRecord = async (req, res) => {
+  try {
+    const record = await EconomicRecord.findByIdAndDelete(req.params.recordId);
+    if (record) {
+      res.json({ message: 'Economic record removed' });
+    } else {
+      res.status(404).json({ message: 'Economic record not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Delete Poverty Record
+const deletePovertyRecord = async (req, res) => {
+  try {
+    const record = await PovertyRecord.findByIdAndDelete(req.params.recordId);
+    if (record) {
+      res.json({ message: 'Poverty record removed' });
+    } else {
+      res.status(404).json({ message: 'Poverty record not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createRegion,
+  deleteRegion,
   createCountry,
   updateCountry,
+  deleteCountry,
   createEconomicRecord,
   updateEconomicRecord,
+  deleteEconomicRecord,
   createPovertyRecord,
+  deletePovertyRecord,
   createInflationRecord,
   createBlackMarketRecord,
   createWarCostRecord,
@@ -163,4 +223,5 @@ module.exports = {
   updateReconstructionRecord,
   createUnemploymentRecord,
 };
+
 
