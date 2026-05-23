@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { createReconstructionRecord } = require('../controllers/recordController');
+const { createReconstructionRecord, updateReconstructionRecord } = require('../controllers/recordController');
 
 router.post('/', createReconstructionRecord);
+router.put('/:recordId', updateReconstructionRecord);
 
 module.exports = router;
+

@@ -47,6 +47,32 @@ const updateConflict = async (req, res) => {
   }
 };
 
+const updateConflictStatus = async (req, res) => {
+  try {
+    const { status, Status } = req.body;
+    const newStatus = Status || status;
+
+    if (!newStatus) {
+      return res.status(400).json({ message: 'Status is required' });
+    }
+
+    const conflict = await Conflict.findByIdAndUpdate(
+      req.params.conflictId,
+      { Status: newStatus },
+      { new: true, runValidators: true }
+    );
+
+    if (conflict) {
+      res.json(conflict);
+    } else {
+      res.status(404).json({ message: 'Conflict not found' });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+
 const deleteConflict = async (req, res) => {
   try {
     const conflict = await Conflict.findByIdAndDelete(req.params.conflictId);
@@ -1391,6 +1417,7 @@ module.exports = {
   getConflictById,
   createConflict,
   updateConflict,
+  updateConflictStatus,
   deleteConflict,
   getConflictsByName,
   getConflictsByType,

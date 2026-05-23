@@ -5,6 +5,7 @@ const {
   getConflictById,
   createConflict,
   updateConflict,
+  updateConflictStatus,
   deleteConflict,
   getConflictsByName,
   getConflictsByType,
@@ -539,10 +540,14 @@ router.post('/', createConflict);
 router.get('/:conflictId', getConflictById);
 
 // Replace conflict data
-router.put('/:conflictId', protect, updateConflict);
+router.put('/:conflictId', updateConflict);
 
 // Update conflict details
-router.patch('/:conflictId', protect, updateConflict);
+router.patch('/:conflictId', updateConflict);
+
+// Update conflict status
+router.patch('/:conflictId/status', updateConflictStatus);
+
 
 // Delete conflict
 router.delete('/:conflictId', protect, deleteConflict);
