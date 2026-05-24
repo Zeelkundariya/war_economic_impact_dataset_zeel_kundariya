@@ -289,6 +289,81 @@ const getLowestGDPConflict = async (req, res) => {
   }
 };
 
+// Get conflict with highest poverty
+const getHighestPovertyConflict = async (req, res) => {
+  try {
+    const conflict = await Conflict.findOne({ During_War_Poverty_Rate_Percentage: { $ne: null } })
+      .sort({ During_War_Poverty_Rate_Percentage: -1 });
+    if (conflict) {
+      res.json(conflict);
+    } else {
+      res.status(404).json({ message: 'No conflicts found with poverty data' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get conflict with highest food insecurity
+const getHighestFoodInsecurityConflict = async (req, res) => {
+  try {
+    const conflict = await Conflict.findOne({ Food_Insecurity_Rate_Percentage: { $ne: null } })
+      .sort({ Food_Insecurity_Rate_Percentage: -1 });
+    if (conflict) {
+      res.json(conflict);
+    } else {
+      res.status(404).json({ message: 'No conflicts found with food insecurity data' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get conflict with highest currency gap
+const getHighestCurrencyGapConflict = async (req, res) => {
+  try {
+    const conflict = await Conflict.findOne({ Currency_Gap_Percentage: { $ne: null } })
+      .sort({ Currency_Gap_Percentage: -1 });
+    if (conflict) {
+      res.json(conflict);
+    } else {
+      res.status(404).json({ message: 'No conflicts found with currency gap data' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get conflict with highest war cost
+const getHighestWarCostConflict = async (req, res) => {
+  try {
+    const conflict = await Conflict.findOne({ Cost_of_War_USD: { $ne: null } })
+      .sort({ Cost_of_War_USD: -1 });
+    if (conflict) {
+      res.json(conflict);
+    } else {
+      res.status(404).json({ message: 'No conflicts found with war cost data' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get conflict with highest reconstruction cost
+const getHighestReconstructionCostConflict = async (req, res) => {
+  try {
+    const conflict = await Conflict.findOne({ Estimated_Reconstruction_Cost_USD: { $ne: null } })
+      .sort({ Estimated_Reconstruction_Cost_USD: -1 });
+    if (conflict) {
+      res.json(conflict);
+    } else {
+      res.status(404).json({ message: 'No conflicts found with reconstruction cost data' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const deleteConflict = async (req, res) => {
   try {
     const conflict = await Conflict.findByIdAndDelete(req.params.conflictId);
@@ -1644,6 +1719,11 @@ module.exports = {
   getResolvedConflictsCount,
   getHighestInflationConflict,
   getLowestGDPConflict,
+  getHighestPovertyConflict,
+  getHighestFoodInsecurityConflict,
+  getHighestCurrencyGapConflict,
+  getHighestWarCostConflict,
+  getHighestReconstructionCostConflict,
   deleteConflict,
   getConflictsByName,
   getConflictsByType,
