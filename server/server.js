@@ -39,6 +39,7 @@ app.use('/api/v1/reconstruction-records', require('./routes/reconstructionRecord
 app.use('/api/v1/unemployment-records', require('./routes/unemploymentRecordRoutes'));
 app.use('/api/v1/stats', require('./routes/statsRoutes'));
 app.use('/api/v1/admin', require('./routes/adminRoutes'));
+app.use('/api/v1/protected', require('./routes/protectedRoutes'));
 
 // Root Level Routes (for direct copy-paste flexibility)
 app.use('/conflicts', require('./routes/conflictRoutes'));
@@ -53,6 +54,7 @@ app.use('/reconstruction-records', require('./routes/reconstructionRecordRoutes'
 app.use('/unemployment-records', require('./routes/unemploymentRecordRoutes'));
 app.use('/stats', require('./routes/statsRoutes'));
 app.use('/admin', require('./routes/adminRoutes'));
+app.use('/protected', require('./routes/protectedRoutes'));
 
 
 app.use('/api/v1/auth', require('./routes/authRoutes'));
