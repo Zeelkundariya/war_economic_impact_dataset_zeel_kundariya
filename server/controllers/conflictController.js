@@ -229,7 +229,65 @@ const updateConflictSector = async (req, res) => {
   }
 };
 
+// Get total conflicts count
+const getTotalConflictsCount = async (req, res) => {
+  try {
+    const count = await Conflict.countDocuments();
+    res.json({ totalConflicts: count });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
+// Get ongoing conflicts count
+const getOngoingConflictsCount = async (req, res) => {
+  try {
+    const count = await Conflict.countDocuments({ Status: { $regex: /^ongoing$/i } });
+    res.json({ ongoingConflicts: count });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get resolved conflicts count
+const getResolvedConflictsCount = async (req, res) => {
+  try {
+    const count = await Conflict.countDocuments({ Status: { $regex: /^resolved$/i } });
+    res.json({ resolvedConflicts: count });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get conflict with highest inflation
+const getHighestInflationConflict = async (req, res) => {
+  try {
+    const conflict = await Conflict.findOne({ Inflation_Rate_Percentage: { $ne: null } })
+      .sort({ Inflation_Rate_Percentage: -1 });
+    if (conflict) {
+      res.json(conflict);
+    } else {
+      res.status(404).json({ message: 'No conflicts found with inflation data' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get conflict with lowest GDP
+const getLowestGDPConflict = async (req, res) => {
+  try {
+    const conflict = await Conflict.findOne({ GDP_Change_Percentage: { $ne: null } })
+      .sort({ GDP_Change_Percentage: 1 });
+    if (conflict) {
+      res.json(conflict);
+    } else {
+      res.status(404).json({ message: 'No conflicts found with GDP data' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 const deleteConflict = async (req, res) => {
   try {
@@ -1581,6 +1639,11 @@ module.exports = {
   updateConflictPoverty,
   updateConflictUnemployment,
   updateConflictSector,
+  getTotalConflictsCount,
+  getOngoingConflictsCount,
+  getResolvedConflictsCount,
+  getHighestInflationConflict,
+  getLowestGDPConflict,
   deleteConflict,
   getConflictsByName,
   getConflictsByType,
