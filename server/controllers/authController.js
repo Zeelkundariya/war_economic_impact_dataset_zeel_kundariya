@@ -96,4 +96,49 @@ const resetPassword = async (req, res) => {
   res.json({ message: 'Password reset successful' });
 };
 
-module.exports = { authUser, registerUser, logoutUser, forgotPassword, resetPassword };
+const refreshToken = async (req, res) => {
+  const { token } = req.body;
+  if (!token) {
+    return res.status(400).json({ message: 'Token is required' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const newToken = generateToken(decoded.id);
+    res.json({ token: newToken });
+  } catch (error) {
+    res.status(401).json({ message: 'Invalid or expired token' });
+  }
+};
+
+const getMe = async (req, res) => {
+  if (req.user) {
+    res.json(req.user);
+  } else {
+    res.status(404).json({ message: 'User not found' });
+  }
+};
+
+const deleteAccount = async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.user._id);
+    if (user) {
+      res.json({ message: 'User account deleted successfully' });
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = {
+  authUser,
+  registerUser,
+  logoutUser,
+  forgotPassword,
+  resetPassword,
+  refreshToken,
+  getMe,
+  deleteAccount,
+};
