@@ -78,10 +78,33 @@ const refreshJwtToken = async (req, res) => {
   }
 };
 
+const getJwtAdmin = async (req, res) => {
+  res.json({
+    message: 'Access granted to JWT admin protected route',
+    user: req.user,
+  });
+};
+
+const getJwtUser = async (req, res) => {
+  res.json({
+    message: 'Access granted to JWT user protected route',
+    user: req.user,
+  });
+};
+
+const deleteJwtLogout = async (req, res) => {
+  res.json({
+    message: 'JWT session logged out successfully',
+  });
+};
+
 module.exports = {
   getJwtProfile,
   getJwtDashboard,
   generateJwtToken,
   verifyJwtToken,
   refreshJwtToken,
+  getJwtAdmin,
+  getJwtUser,
+  deleteJwtLogout,
 };

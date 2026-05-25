@@ -6,8 +6,11 @@ const {
   generateJwtToken,
   verifyJwtToken,
   refreshJwtToken,
+  getJwtAdmin,
+  getJwtUser,
+  deleteJwtLogout,
 } = require('../controllers/jwtController');
-const { protect } = require('../middlewares/authMiddleware');
+const { protect, admin } = require('../middlewares/authMiddleware');
 
 // GET /jwt/profile (Protected)
 router.get('/profile', protect, getJwtProfile);
@@ -23,5 +26,14 @@ router.post('/verify-token', verifyJwtToken);
 
 // POST /jwt/refresh-token (Public)
 router.post('/refresh-token', refreshJwtToken);
+
+// GET /jwt/admin (Admin Protected)
+router.get('/admin', protect, admin, getJwtAdmin);
+
+// GET /jwt/user (User Protected)
+router.get('/user', protect, getJwtUser);
+
+// DELETE /jwt/logout (Public Session Logout)
+router.delete('/logout', deleteJwtLogout);
 
 module.exports = router;
