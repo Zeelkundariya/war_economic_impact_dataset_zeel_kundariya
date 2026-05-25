@@ -32,20 +32,57 @@ const getConflictById = async (req, res) => {
 
 const createConflict = async (req, res) => {
   try {
-    const { Conflict_Name } = req.body;
+    const {
+      Conflict_Name,
+      Conflict_Type,
+      Region,
+      Primary_Country,
+      country,
+      Country,
+      Start_Year,
+    } = req.body;
 
-    // 1. Handle duplicate conflict entry
-    if (Conflict_Name) {
-      const conflictExists = await Conflict.findOne({ Conflict_Name });
-      if (conflictExists) {
-        return res.status(400).json({ message: 'Conflict entry already exists' });
-      }
+    // 1. Validate Conflict Name
+    if (!Conflict_Name || typeof Conflict_Name !== 'string' || Conflict_Name.trim() === '') {
+      return res.status(400).json({ message: 'Conflict Name is required and must be a valid string' });
     }
 
-    const conflict = await Conflict.create(req.body);
+    // 2. Validate Conflict Type
+    if (!Conflict_Type || typeof Conflict_Type !== 'string' || Conflict_Type.trim() === '') {
+      return res.status(400).json({ message: 'Conflict Type is required and must be a valid string' });
+    }
+
+    // 3. Validate Region
+    if (!Region || typeof Region !== 'string' || Region.trim() === '') {
+      return res.status(400).json({ message: 'Region is required and must be a valid string' });
+    }
+
+    // 4. Validate Country
+    const targetCountry = Primary_Country || country || Country;
+    if (!targetCountry || typeof targetCountry !== 'string' || targetCountry.trim() === '') {
+      return res.status(400).json({ message: 'Country is required and must be a valid string' });
+    }
+
+    // 5. Validate Start Year
+    if (!Start_Year || isNaN(Start_Year) || Start_Year.toString().trim().length !== 4) {
+      return res.status(400).json({ message: 'Start Year is required and must be a valid 4-digit year' });
+    }
+
+    // 6. Handle duplicate conflict entry
+    const conflictExists = await Conflict.findOne({ Conflict_Name });
+    if (conflictExists) {
+      return res.status(400).json({ message: 'Conflict entry already exists' });
+    }
+
+    // Normalize targetCountry to Primary_Country
+    const bodyData = {
+      ...req.body,
+      Primary_Country: targetCountry,
+    };
+
+    const conflict = await Conflict.create(bodyData);
     res.status(201).json(conflict);
   } catch (error) {
-    // 2. Handle missing required fields & other validation errors
     res.status(400).json({ message: error.message });
   }
 };
