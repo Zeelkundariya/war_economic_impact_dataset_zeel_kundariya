@@ -59,6 +59,8 @@ app.use('/protected', require('./routes/protectedRoutes'));
 
 app.use('/api/v1/auth', require('./routes/authRoutes'));
 app.use('/auth', require('./routes/authRoutes'));
+app.use('/api/v1/jwt', require('./routes/jwtRoutes'));
+app.use('/jwt', require('./routes/jwtRoutes'));
 
 app.use(errorHandler);
 
