@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Conflict = require('../models/conflictModel');
 const {
   getTotalConflictsCount,
   getOngoingConflictsCount,
@@ -12,6 +13,17 @@ const {
   getHighestWarCostConflict,
   getHighestReconstructionCostConflict,
 } = require('../controllers/conflictController');
+
+// Fetch metadata for total conflicts stats
+router.head('/total-conflicts', async (req, res) => {
+  try {
+    const count = await Conflict.countDocuments();
+    res.setHeader('X-Total-Conflicts', count);
+    res.status(200).end();
+  } catch (error) {
+    res.status(500).end();
+  }
+});
 
 // Fetch total conflicts count
 router.get('/total-conflicts', getTotalConflictsCount);
