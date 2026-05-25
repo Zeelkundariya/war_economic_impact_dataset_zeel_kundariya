@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Conflict = require('../models/conflictModel');
 const {
   getConflicts,
   getConflictById,
@@ -549,6 +550,69 @@ router.get('/', getConflicts);
 
 // Create new conflict
 router.post('/', createConflictLimiter, createConflict);
+
+// Fetch highest inflation conflicts
+router.get('/top/highest-inflation', async (req, res, next) => {
+  try {
+    const conflicts = await Conflict.find({ Inflation_Rate_Percentage: { $ne: null } })
+      .sort({ Inflation_Rate_Percentage: -1 })
+      .limit(10);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Fetch highest poverty conflicts
+router.get('/top/highest-poverty', async (req, res, next) => {
+  try {
+    const conflicts = await Conflict.find({ During_War_Poverty_Rate_Percentage: { $ne: null } })
+      .sort({ During_War_Poverty_Rate_Percentage: -1 })
+      .limit(10);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Fetch recent conflicts
+router.get('/recent', async (req, res, next) => {
+  try {
+    const conflicts = await Conflict.find({})
+      .sort({ Start_Year: -1 })
+      .limit(10);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Fetch latest conflicts
+router.get('/latest', async (req, res, next) => {
+  try {
+    const conflicts = await Conflict.find({})
+      .sort({ createdAt: -1 })
+      .limit(10);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Fetch random conflicts
+router.get('/random', async (req, res, next) => {
+  try {
+    const count = await Conflict.countDocuments();
+    if (count === 0) {
+      return res.status(404).json({ message: 'No conflicts found' });
+    }
+    const random = Math.floor(Math.random() * count);
+    const conflict = await Conflict.findOne().skip(random);
+    res.json(conflict);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 // Fetch conflict by ID
 router.get('/:conflictId', getConflictById);
