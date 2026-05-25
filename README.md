@@ -218,7 +218,7 @@ npm run data:import
 ---
 
 ## 🧪 Testing & Optimization
--   **Postman**: Comprehensive testing for all endpoints.
+-   **Postman**: Comprehensive testing for all endpoints. Access the live [Postman Collection Documentation](https://documenter.getpostman.com/view/50840741/2sBXwmPYBh) directly to explore and test all API routes.
 -   **Stress Testing**: Handling large data queries with optimized pagination.
 -   **Lean Queries**: Using `.lean()` in Mongoose for read-only operations.
 
