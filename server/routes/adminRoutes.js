@@ -10,6 +10,11 @@ const {
 const { protect, admin } = require('../middlewares/authMiddleware');
 const { adminDashboardLimiter } = require('../middlewares/rateLimitMiddleware');
 
+router.options('/conflicts', (req, res) => {
+  res.setHeader('Allow', 'GET, POST, OPTIONS');
+  res.status(204).end();
+});
+
 // Apply protection and admin authorization middleware to all routes
 router.use(protect);
 router.use(admin);

@@ -13,6 +13,11 @@ const {
 const { protect } = require('../middlewares/authMiddleware');
 const { loginLimiter, registerLimiter } = require('../middlewares/rateLimitMiddleware');
 
+router.options('/login', (req, res) => {
+  res.setHeader('Allow', 'POST, OPTIONS');
+  res.status(204).end();
+});
+
 router.post('/login', loginLimiter, authUser);
 router.post('/register', registerLimiter, registerUser);
 router.post('/logout', logoutUser);

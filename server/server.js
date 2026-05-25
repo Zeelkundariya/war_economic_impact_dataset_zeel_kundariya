@@ -21,7 +21,7 @@ const app = express();
 app.use(express.json());
 
 // Enable CORS
-app.use(cors());
+app.use(cors({ preflightContinue: true }));
 
 
 
@@ -31,6 +31,14 @@ app.get('/', (req, res) => {
 });
 
 // Root and versioned search endpoints
+app.options('/api/v1/search', (req, res) => {
+  res.setHeader('Allow', 'GET, OPTIONS');
+  res.status(204).end();
+});
+app.options('/search', (req, res) => {
+  res.setHeader('Allow', 'GET, OPTIONS');
+  res.status(204).end();
+});
 app.get('/api/v1/search', searchLimiter, searchGeneralConflictsQuery);
 app.get('/search', searchLimiter, searchGeneralConflictsQuery);
 
