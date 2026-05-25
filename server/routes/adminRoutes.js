@@ -8,6 +8,7 @@ const {
   getAdminDashboard,
 } = require('../controllers/adminController');
 const { protect, admin } = require('../middlewares/authMiddleware');
+const { adminDashboardLimiter } = require('../middlewares/rateLimitMiddleware');
 
 // Apply protection and admin authorization middleware to all routes
 router.use(protect);
@@ -24,6 +25,6 @@ router.route('/conflicts/:conflictId')
   .patch(adminUpdateConflict);
 
 // GET /admin/dashboard
-router.get('/dashboard', getAdminDashboard);
+router.get('/dashboard', adminDashboardLimiter, getAdminDashboard);
 
 module.exports = router;

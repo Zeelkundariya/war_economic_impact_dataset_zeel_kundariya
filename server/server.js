@@ -4,6 +4,8 @@ const cors = require('cors');
 const morgan = require('morgan');
 const connectDB = require('./config/db');
 const { errorHandler } = require('./middlewares/errorMiddleware');
+const { searchGeneralConflictsQuery } = require('./controllers/conflictController');
+const { searchLimiter } = require('./middlewares/rateLimitMiddleware');
 
 // Load env vars
 dotenv.config();
@@ -25,6 +27,10 @@ app.use(cors());
 app.get('/', (req, res) => {
   res.send('API is running...');
 });
+
+// Root and versioned search endpoints
+app.get('/api/v1/search', searchLimiter, searchGeneralConflictsQuery);
+app.get('/search', searchLimiter, searchGeneralConflictsQuery);
 
 // Versioned API Routes
 app.use('/api/v1/conflicts', require('./routes/conflictRoutes'));

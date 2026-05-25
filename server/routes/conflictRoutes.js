@@ -112,6 +112,12 @@ const {
   getCombinedUkraineOngoingQuery,
 } = require('../controllers/conflictController');
 const { protect, admin } = require('../middlewares/authMiddleware');
+const { conflictsLimiter, searchLimiter } = require('../middlewares/rateLimitMiddleware');
+
+// Apply general conflicts rate limiting to all conflict listing endpoints
+router.get('/', conflictsLimiter, (req, res, next) => {
+  next();
+});
 
 // Fetch ongoing conflicts sorted by inflation with pagination
 router.get('/', (req, res, next) => {
@@ -456,6 +462,9 @@ router.get('/high-gdp-loss', paginateHighGDPLossConflictsQuery);
 
 // Paginate high black market conflicts
 router.get('/black-market/high', paginateHighBlackMarketConflictsQuery);
+
+// Apply search rate limiting to all search sub-routes
+router.use('/search', searchLimiter);
 
 // Search general conflicts by keyword
 router.get('/search', searchGeneralConflictsQuery);
