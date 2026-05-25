@@ -66,10 +66,34 @@ const adminDashboardLimiter = createRateLimiter({
   message: 'Strict admin rate limit exceeded. Try again in a minute.',
 });
 
+// 6. Create Conflict Rate Limiter (Prevent spam submissions)
+const createConflictLimiter = createRateLimiter({
+  windowMs: 60000,
+  max: 3, // Set to 3 to prevent spam submissions
+  message: 'Too many conflicts created from this IP. Please try again after a minute.',
+});
+
+// 7. Delete Conflict Rate Limiter (Limit delete requests)
+const deleteConflictLimiter = createRateLimiter({
+  windowMs: 60000,
+  max: 2, // Set to 2 to limit delete requests
+  message: 'Too many delete requests from this IP. Please try again after a minute.',
+});
+
+// 8. Import JSON Rate Limiter (Limit bulk uploads)
+const importJsonLimiter = createRateLimiter({
+  windowMs: 60000,
+  max: 2, // Set to 2 to limit bulk uploads
+  message: 'Too many bulk uploads from this IP. Please try again after a minute.',
+});
+
 module.exports = {
   conflictsLimiter,
   loginLimiter,
   registerLimiter,
   searchLimiter,
   adminDashboardLimiter,
+  createConflictLimiter,
+  deleteConflictLimiter,
+  importJsonLimiter,
 };
