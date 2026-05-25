@@ -34,6 +34,11 @@ app.get('/', (req, res) => {
 app.get('/api/v1/search', searchLimiter, searchGeneralConflictsQuery);
 app.get('/search', searchLimiter, searchGeneralConflictsQuery);
 
+app.head('/health', (req, res) => {
+  res.setHeader('X-API-Health', 'OK');
+  res.status(200).end();
+});
+
 // API Health Check
 app.get('/health', (req, res) => {
   res.status(200).json({

@@ -115,6 +115,33 @@ const {
 const { protect, admin } = require('../middlewares/authMiddleware');
 const { conflictsLimiter, searchLimiter, createConflictLimiter, deleteConflictLimiter } = require('../middlewares/rateLimitMiddleware');
 
+// Fetch only headers for conflicts collection
+router.head('/', async (req, res) => {
+  try {
+    const count = await Conflict.countDocuments();
+    res.setHeader('X-Total-Count', count);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).end();
+  } catch (error) {
+    res.status(500).end();
+  }
+});
+
+// Fetch headers for single conflict resource
+router.head('/:conflictId', async (req, res) => {
+  try {
+    const conflict = await Conflict.findById(req.params.conflictId);
+    if (!conflict) {
+      return res.status(404).end();
+    }
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Last-Modified', conflict.updatedAt.toUTCString());
+    res.status(200).end();
+  } catch (error) {
+    res.status(500).end();
+  }
+});
+
 // Apply general conflicts rate limiting to all conflict listing endpoints
 router.get('/', conflictsLimiter, (req, res, next) => {
   next();
