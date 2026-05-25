@@ -53,4 +53,47 @@ const registerUser = async (req, res) => {
   }
 };
 
-module.exports = { authUser, registerUser };
+const logoutUser = async (req, res) => {
+  res.json({ message: 'User logged out successfully' });
+};
+
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+
+  // Generate a simple 6-digit verification code/token
+  const resetToken = Math.floor(100000 + Math.random() * 900000).toString();
+  user.resetPasswordToken = resetToken;
+  user.resetPasswordExpires = Date.now() + 3600000; // 1 hour expiration
+  await user.save();
+
+  res.json({
+    message: 'Password reset token generated. In a production environment, this would be sent to the user via email.',
+    resetToken,
+  });
+};
+
+const resetPassword = async (req, res) => {
+  const { resetToken, newPassword } = req.body;
+  const user = await User.findOne({
+    resetPasswordToken: resetToken,
+    resetPasswordExpires: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return res.status(400).json({ message: 'Invalid or expired reset token' });
+  }
+
+  user.password = newPassword;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
+  await user.save();
+
+  res.json({ message: 'Password reset successful' });
+};
+
+module.exports = { authUser, registerUser, logoutUser, forgotPassword, resetPassword };
