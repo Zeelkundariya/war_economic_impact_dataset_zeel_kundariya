@@ -112,7 +112,7 @@ const {
   getCombinedUkraineOngoingQuery,
 } = require('../controllers/conflictController');
 const { protect, admin } = require('../middlewares/authMiddleware');
-const { conflictsLimiter, searchLimiter } = require('../middlewares/rateLimitMiddleware');
+const { conflictsLimiter, searchLimiter, createConflictLimiter, deleteConflictLimiter } = require('../middlewares/rateLimitMiddleware');
 
 // Apply general conflicts rate limiting to all conflict listing endpoints
 router.get('/', conflictsLimiter, (req, res, next) => {
@@ -548,7 +548,7 @@ router.get('/search/conflicts', searchConflictsByCountryQuery);
 router.get('/', getConflicts);
 
 // Create new conflict
-router.post('/', createConflict);
+router.post('/', createConflictLimiter, createConflict);
 
 // Fetch conflict by ID
 router.get('/:conflictId', getConflictById);
@@ -580,7 +580,7 @@ router.patch('/:conflictId/sector', updateConflictSector);
 
 
 // Delete conflict
-router.delete('/:conflictId', deleteConflict);
+router.delete('/:conflictId', deleteConflictLimiter, deleteConflict);
 
 // Fetch conflicts by name
 router.get('/name/:name', getConflictsByName);

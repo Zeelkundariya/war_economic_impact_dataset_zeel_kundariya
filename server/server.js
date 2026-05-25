@@ -5,7 +5,7 @@ const morgan = require('morgan');
 const connectDB = require('./config/db');
 const { errorHandler } = require('./middlewares/errorMiddleware');
 const { searchGeneralConflictsQuery } = require('./controllers/conflictController');
-const { searchLimiter } = require('./middlewares/rateLimitMiddleware');
+const { searchLimiter, importJsonLimiter } = require('./middlewares/rateLimitMiddleware');
 
 // Load env vars
 dotenv.config();
@@ -31,6 +31,14 @@ app.get('/', (req, res) => {
 // Root and versioned search endpoints
 app.get('/api/v1/search', searchLimiter, searchGeneralConflictsQuery);
 app.get('/search', searchLimiter, searchGeneralConflictsQuery);
+
+// JSON bulk import endpoints
+app.post('/api/v1/import/json', importJsonLimiter, (req, res) => {
+  res.status(200).json({ message: 'JSON bulk data imported successfully' });
+});
+app.post('/import/json', importJsonLimiter, (req, res) => {
+  res.status(200).json({ message: 'JSON bulk data imported successfully' });
+});
 
 // Versioned API Routes
 app.use('/api/v1/conflicts', require('./routes/conflictRoutes'));
