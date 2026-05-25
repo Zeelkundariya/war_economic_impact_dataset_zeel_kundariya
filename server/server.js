@@ -6,8 +6,7 @@ const mongoose = require('mongoose');
 const connectDB = require('./config/db');
 const Conflict = require('./models/conflictModel');
 const { errorHandler } = require('./middlewares/errorMiddleware');
-const { searchGeneralConflictsQuery } = require('./controllers/conflictController');
-const { searchLimiter, importJsonLimiter } = require('./middlewares/rateLimitMiddleware');
+const { importJsonLimiter } = require('./middlewares/rateLimitMiddleware');
 
 // Load env vars
 dotenv.config();
@@ -31,16 +30,8 @@ app.get('/', (req, res) => {
 });
 
 // Root and versioned search endpoints
-app.options('/api/v1/search', (req, res) => {
-  res.setHeader('Allow', 'GET, OPTIONS');
-  res.status(204).end();
-});
-app.options('/search', (req, res) => {
-  res.setHeader('Allow', 'GET, OPTIONS');
-  res.status(204).end();
-});
-app.get('/api/v1/search', searchLimiter, searchGeneralConflictsQuery);
-app.get('/search', searchLimiter, searchGeneralConflictsQuery);
+app.use('/api/v1/search', require('./routes/searchRoutes'));
+app.use('/search', require('./routes/searchRoutes'));
 
 app.head('/health', (req, res) => {
   res.setHeader('X-API-Health', 'OK');

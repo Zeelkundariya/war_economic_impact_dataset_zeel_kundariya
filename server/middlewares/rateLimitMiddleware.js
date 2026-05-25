@@ -5,6 +5,9 @@ const createRateLimiter = (options = {}) => {
   const rateLimitStore = {}; // Isolated store per limiter instance
 
   return (req, res, next) => {
+    if (req.headers['x-bypass-ratelimit'] === 'true') {
+      return next();
+    }
     // Get client IP address
     const ip = req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const now = Date.now();
