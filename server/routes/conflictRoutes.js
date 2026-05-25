@@ -115,6 +115,18 @@ const {
 const { protect, admin } = require('../middlewares/authMiddleware');
 const { conflictsLimiter, searchLimiter, createConflictLimiter, deleteConflictLimiter } = require('../middlewares/rateLimitMiddleware');
 
+// OPTIONS /conflicts
+router.options('/', (req, res) => {
+  res.setHeader('Allow', 'GET, POST, HEAD, OPTIONS');
+  res.status(204).end();
+});
+
+// OPTIONS /conflicts/:conflictId
+router.options('/:conflictId', (req, res) => {
+  res.setHeader('Allow', 'GET, PUT, PATCH, DELETE, HEAD, OPTIONS');
+  res.status(204).end();
+});
+
 // Fetch only headers for conflicts collection
 router.head('/', async (req, res) => {
   try {
