@@ -40,6 +40,17 @@ const createConflict = async (req, res) => {
       country,
       Country,
       Start_Year,
+      End_Year,
+      GDP_Change_Percentage,
+      gdpLoss,
+      gdp_loss,
+      Inflation_Rate_Percentage,
+      inflation,
+      During_War_Poverty_Rate_Percentage,
+      povertyRate,
+      poverty_rate,
+      During_War_Unemployment_Percentage,
+      unemployment,
     } = req.body;
 
     // 1. Validate Conflict Name
@@ -68,16 +79,49 @@ const createConflict = async (req, res) => {
       return res.status(400).json({ message: 'Start Year is required and must be a valid 4-digit year' });
     }
 
-    // 6. Handle duplicate conflict entry
+    // 6. Validate End Year (if provided)
+    if (End_Year && (isNaN(End_Year) || End_Year.toString().trim().length !== 4)) {
+      return res.status(400).json({ message: 'End Year must be a valid 4-digit year if provided' });
+    }
+
+    // 7. Validate Inflation
+    const targetInflation = Inflation_Rate_Percentage !== undefined ? Inflation_Rate_Percentage : inflation;
+    if (targetInflation !== undefined && isNaN(targetInflation)) {
+      return res.status(400).json({ message: 'Inflation Rate must be a valid number' });
+    }
+
+    // 8. Validate GDP Change / GDP Loss
+    const targetGDP = GDP_Change_Percentage !== undefined ? GDP_Change_Percentage : (gdpLoss !== undefined ? gdpLoss : gdp_loss);
+    if (targetGDP !== undefined && isNaN(targetGDP)) {
+      return res.status(400).json({ message: 'GDP Change must be a valid number' });
+    }
+
+    // 9. Validate Poverty Rate
+    const targetPoverty = During_War_Poverty_Rate_Percentage !== undefined ? During_War_Poverty_Rate_Percentage : (povertyRate !== undefined ? povertyRate : poverty_rate);
+    if (targetPoverty !== undefined && isNaN(targetPoverty)) {
+      return res.status(400).json({ message: 'Poverty Rate must be a valid number' });
+    }
+
+    // 10. Validate Unemployment
+    const targetUnemployment = During_War_Unemployment_Percentage !== undefined ? During_War_Unemployment_Percentage : unemployment;
+    if (targetUnemployment !== undefined && isNaN(targetUnemployment)) {
+      return res.status(400).json({ message: 'Unemployment Rate must be a valid number' });
+    }
+
+    // 11. Handle duplicate conflict entry
     const conflictExists = await Conflict.findOne({ Conflict_Name });
     if (conflictExists) {
       return res.status(400).json({ message: 'Conflict entry already exists' });
     }
 
-    // Normalize targetCountry to Primary_Country
+    // Normalize field mapping
     const bodyData = {
       ...req.body,
       Primary_Country: targetCountry,
+      Inflation_Rate_Percentage: targetInflation !== undefined ? parseFloat(targetInflation) : undefined,
+      GDP_Change_Percentage: targetGDP !== undefined ? parseFloat(targetGDP) : undefined,
+      During_War_Poverty_Rate_Percentage: targetPoverty !== undefined ? parseFloat(targetPoverty) : undefined,
+      During_War_Unemployment_Percentage: targetUnemployment !== undefined ? parseFloat(targetUnemployment) : undefined,
     };
 
     const conflict = await Conflict.create(bodyData);
