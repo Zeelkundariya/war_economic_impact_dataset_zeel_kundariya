@@ -455,10 +455,111 @@ router.get('/', (req, res, next) => {
   next();
 });
 
-// Sort by reconstruction cost
+// Sort by reconstruction cost (descending)
 router.get('/', (req, res, next) => {
   if (req.query.sort === '-Estimated_Reconstruction_Cost_USD') {
     return sortConflictsByReconstructionCostQuery(req, res);
+  }
+  next();
+});
+
+// --- MISSING SORT ROUTES (19 total - adding 9 here) ---
+
+// Route 1: Sort descending by inflation rate (standalone)
+router.get('/', (req, res, next) => {
+  if (req.query.sort === '-Inflation_Rate_%') {
+    return Conflict.find({})
+      .sort({ Inflation_Rate_Percentage: -1 })
+      .then(conflicts => res.json(conflicts))
+      .catch(err => res.status(500).json({ message: err.message }));
+  }
+  next();
+});
+
+// Route 2: Sort ascending by GDP change
+router.get('/', (req, res, next) => {
+  if (req.query.sort === 'GDP_Change_%') {
+    return Conflict.find({})
+      .sort({ GDP_Change_Percentage: 1 })
+      .then(conflicts => res.json(conflicts))
+      .catch(err => res.status(500).json({ message: err.message }));
+  }
+  next();
+});
+
+// Route 3: Sort ascending by pre-war unemployment
+router.get('/', (req, res, next) => {
+  if (req.query.sort === 'Pre_War_Unemployment_%') {
+    return Conflict.find({})
+      .sort({ Pre_War_Unemployment_Rate_Percentage: 1 })
+      .then(conflicts => res.json(conflicts))
+      .catch(err => res.status(500).json({ message: err.message }));
+  }
+  next();
+});
+
+// Route 4: Sort descending by during-war unemployment
+router.get('/', (req, res, next) => {
+  if (req.query.sort === '-During_War_Unemployment_%') {
+    return Conflict.find({})
+      .sort({ During_War_Unemployment_Rate_Percentage: -1 })
+      .then(conflicts => res.json(conflicts))
+      .catch(err => res.status(500).json({ message: err.message }));
+  }
+  next();
+});
+
+// Route 5: Sort ascending by food insecurity rate
+router.get('/', (req, res, next) => {
+  if (req.query.sort === 'Food_Insecurity_Rate_%') {
+    return Conflict.find({})
+      .sort({ Food_Insecurity_Rate_Percentage: 1 })
+      .then(conflicts => res.json(conflicts))
+      .catch(err => res.status(500).json({ message: err.message }));
+  }
+  next();
+});
+
+// Route 6: Sort ascending by currency devaluation
+router.get('/', (req, res, next) => {
+  if (req.query.sort === 'Currency_Devaluation_%') {
+    return Conflict.find({})
+      .sort({ Currency_Devaluation_Percentage: 1 })
+      .then(conflicts => res.json(conflicts))
+      .catch(err => res.status(500).json({ message: err.message }));
+  }
+  next();
+});
+
+// Route 7: Sort ascending by reconstruction cost
+router.get('/', (req, res, next) => {
+  if (req.query.sort === 'Estimated_Reconstruction_Cost_USD') {
+    return Conflict.find({})
+      .sort({ Estimated_Reconstruction_Cost_USD: 1 })
+      .then(conflicts => res.json(conflicts))
+      .catch(err => res.status(500).json({ message: err.message }));
+  }
+  next();
+});
+
+// Route 8: Sort descending by end year
+router.get('/', (req, res, next) => {
+  if (req.query.sort === '-End_Year') {
+    return Conflict.find({})
+      .sort({ End_Year: -1 })
+      .then(conflicts => res.json(conflicts))
+      .catch(err => res.status(500).json({ message: err.message }));
+  }
+  next();
+});
+
+// Route 9: Sort alphabetically by conflict name
+router.get('/', (req, res, next) => {
+  if (req.query.sort === 'Conflict_Name') {
+    return Conflict.find({})
+      .sort({ Conflict_Name: 1 })
+      .then(conflicts => res.json(conflicts))
+      .catch(err => res.status(500).json({ message: err.message }));
   }
   next();
 });
