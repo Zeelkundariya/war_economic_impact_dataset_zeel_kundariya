@@ -2,7 +2,9 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
 const connectDB = require('./config/db');
+const Conflict = require('./models/conflictModel');
 const { errorHandler } = require('./middlewares/errorMiddleware');
 const { searchGeneralConflictsQuery } = require('./controllers/conflictController');
 const { searchLimiter, importJsonLimiter } = require('./middlewares/rateLimitMiddleware');
@@ -31,6 +33,75 @@ app.get('/', (req, res) => {
 // Root and versioned search endpoints
 app.get('/api/v1/search', searchLimiter, searchGeneralConflictsQuery);
 app.get('/search', searchLimiter, searchGeneralConflictsQuery);
+
+// API Health Check
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    uptime: process.uptime(),
+    timestamp: new Date(),
+    database: mongoose.connection.readyState === 1 ? 'CONNECTED' : 'DISCONNECTED'
+  });
+});
+
+// API Version
+app.get('/version', (req, res) => {
+  res.status(200).json({
+    version: '1.0.0',
+    environment: process.env.NODE_ENV || 'development',
+    name: 'War Economic Impact API'
+  });
+});
+
+// Conflict Comparison
+app.get('/compare', async (req, res) => {
+  try {
+    const { conflict1, conflict2 } = req.query;
+    if (!conflict1 || !conflict2) {
+      return res.status(400).json({ message: 'Both conflict1 and conflict2 query parameters are required' });
+    }
+    const record1 = await Conflict.findOne({ Conflict_Name: { $regex: conflict1, $options: 'i' } });
+    const record2 = await Conflict.findOne({ Conflict_Name: { $regex: conflict2, $options: 'i' } });
+
+    if (!record1 || !record2) {
+      return res.status(404).json({
+        message: 'One or both conflicts not found',
+        found: {
+          [conflict1]: !!record1,
+          [conflict2]: !!record2
+        }
+      });
+    }
+
+    res.json({
+      comparison: {
+        metric: ['Conflict Name', 'Conflict Type', 'Region', 'Start Year', 'Status', 'Cost of War (USD)', 'GDP Change', 'Reconstruction Cost (USD)'],
+        [record1.Conflict_Name]: [
+          record1.Conflict_Name,
+          record1.Conflict_Type,
+          record1.Region,
+          record1.Start_Year,
+          record1.Status,
+          record1.Cost_of_War_USD || 'N/A',
+          record1.GDP_Change_Percentage ? `${record1.GDP_Change_Percentage}%` : 'N/A',
+          record1.Estimated_Reconstruction_Cost_USD || 'N/A'
+        ],
+        [record2.Conflict_Name]: [
+          record2.Conflict_Name,
+          record2.Conflict_Type,
+          record2.Region,
+          record2.Start_Year,
+          record2.Status,
+          record2.Cost_of_War_USD || 'N/A',
+          record2.GDP_Change_Percentage ? `${record2.GDP_Change_Percentage}%` : 'N/A',
+          record2.Estimated_Reconstruction_Cost_USD || 'N/A'
+        ]
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 // JSON bulk import endpoints
 app.post('/api/v1/import/json', importJsonLimiter, (req, res) => {
