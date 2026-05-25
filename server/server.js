@@ -47,6 +47,11 @@ app.head('/health', (req, res) => {
   res.status(200).end();
 });
 
+app.options('/health', (req, res) => {
+  res.setHeader('Allow', 'GET, HEAD, OPTIONS');
+  res.status(204).end();
+});
+
 // API Health Check
 app.get('/health', (req, res) => {
   res.status(200).json({

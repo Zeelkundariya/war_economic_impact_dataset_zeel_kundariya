@@ -12,6 +12,12 @@ const {
 } = require('../controllers/jwtController');
 const { protect, admin } = require('../middlewares/authMiddleware');
 
+// OPTIONS /jwt/profile
+router.options('/profile', (req, res) => {
+  res.setHeader('Allow', 'GET, OPTIONS');
+  res.status(204).end();
+});
+
 // GET /jwt/profile (Protected)
 router.get('/profile', protect, getJwtProfile);
 
