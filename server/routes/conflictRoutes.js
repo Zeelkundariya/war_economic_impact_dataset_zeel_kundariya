@@ -614,6 +614,49 @@ router.get('/random', async (req, res, next) => {
   }
 });
 
+// Fetch trending conflicts
+router.get('/trending', async (req, res, next) => {
+  try {
+    const conflicts = await Conflict.find({})
+      .sort({ Cost_of_War_USD: -1 })
+      .limit(5);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Fetch high risk conflicts
+router.get('/high-risk', async (req, res, next) => {
+  try {
+    const conflicts = await Conflict.find({
+      $or: [
+        { During_War_Poverty_Rate_Percentage: { $gt: 50 } },
+        { Inflation_Rate_Percentage: { $gt: 20 } },
+        { Food_Insecurity_Rate_Percentage: { $gt: 40 } }
+      ]
+    }).limit(10);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Fetch economic collapse conflicts
+router.get('/economic-collapse', async (req, res, next) => {
+  try {
+    const conflicts = await Conflict.find({
+      $or: [
+        { GDP_Change_Percentage: { $lt: -15 } },
+        { Inflation_Rate_Percentage: { $gt: 50 } }
+      ]
+    }).limit(10);
+    res.json(conflicts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Fetch conflict by ID
 router.get('/:conflictId', getConflictById);
 
