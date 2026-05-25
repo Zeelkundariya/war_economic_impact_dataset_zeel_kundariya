@@ -11,9 +11,10 @@ const {
   deleteAccount,
 } = require('../controllers/authController');
 const { protect } = require('../middlewares/authMiddleware');
+const { loginLimiter, registerLimiter } = require('../middlewares/rateLimitMiddleware');
 
-router.post('/login', authUser);
-router.post('/register', registerUser);
+router.post('/login', loginLimiter, authUser);
+router.post('/register', registerLimiter, registerUser);
 router.post('/logout', logoutUser);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
