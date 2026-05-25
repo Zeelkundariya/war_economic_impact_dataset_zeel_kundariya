@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Conflict = require('../models/conflictModel');
 
 const getConflicts = async (req, res) => {
@@ -11,7 +12,14 @@ const getConflicts = async (req, res) => {
 
 const getConflictById = async (req, res) => {
   try {
+    // 1. Handle invalid conflict ID format
+    if (!mongoose.Types.ObjectId.isValid(req.params.conflictId)) {
+      return res.status(400).json({ message: 'Invalid Conflict ID format' });
+    }
+
     const conflict = await Conflict.findById(req.params.conflictId);
+    
+    // 2. Handle conflict not found
     if (conflict) {
       res.json(conflict);
     } else {
@@ -24,25 +32,44 @@ const getConflictById = async (req, res) => {
 
 const createConflict = async (req, res) => {
   try {
+    const { Conflict_Name } = req.body;
+
+    // 1. Handle duplicate conflict entry
+    if (Conflict_Name) {
+      const conflictExists = await Conflict.findOne({ Conflict_Name });
+      if (conflictExists) {
+        return res.status(400).json({ message: 'Conflict entry already exists' });
+      }
+    }
+
     const conflict = await Conflict.create(req.body);
     res.status(201).json(conflict);
   } catch (error) {
+    // 2. Handle missing required fields & other validation errors
     res.status(400).json({ message: error.message });
   }
 };
 
 const updateConflict = async (req, res) => {
   try {
+    // 1. Handle invalid conflict ID format
+    if (!mongoose.Types.ObjectId.isValid(req.params.conflictId)) {
+      return res.status(400).json({ message: 'Invalid Conflict ID format' });
+    }
+
     const conflict = await Conflict.findByIdAndUpdate(req.params.conflictId, req.body, {
       new: true,
       runValidators: true,
     });
+
     if (conflict) {
       res.json(conflict);
     } else {
+      // 2. Handle conflict not found
       res.status(404).json({ message: 'Conflict not found' });
     }
   } catch (error) {
+    // 3. Handle invalid update data validation errors
     res.status(400).json({ message: error.message });
   }
 };
