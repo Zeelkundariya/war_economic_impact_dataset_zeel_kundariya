@@ -393,7 +393,14 @@ const getHighestReconstructionCostConflict = async (req, res) => {
 
 const deleteConflict = async (req, res) => {
   try {
+    // 1. Handle invalid conflict ID format
+    if (!mongoose.Types.ObjectId.isValid(req.params.conflictId)) {
+      return res.status(400).json({ message: 'Invalid Conflict ID format' });
+    }
+
     const conflict = await Conflict.findByIdAndDelete(req.params.conflictId);
+    
+    // 2. Handle already deleted conflict / not found
     if (conflict) {
       res.json({ message: 'Conflict removed' });
     } else {
