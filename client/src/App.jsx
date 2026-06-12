@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchCurrentUser, logout } from './store/slices/authSlice';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
+import Layout from './components/Layout';
 
 // Lazy loading pages
 const Login = lazy(() => import('./pages/Login'));
@@ -59,57 +60,28 @@ function App() {
 
           {/* Protected Dashboard Routes */}
           <Route
-            path="/dashboard"
             element={
               <ProtectedRoute>
-                <Dashboard />
+                <Layout />
               </ProtectedRoute>
             }
-          />
-          <Route
-            path="/conflicts"
-            element={
-              <ProtectedRoute>
-                <Conflicts />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/analytics"
-            element={
-              <ProtectedRoute>
-                <Analytics />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute>
-                <Settings />
-              </ProtectedRoute>
-            }
-          />
+          >
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/conflicts" element={<Conflicts />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
 
-          {/* Admin Restricted Routes */}
-          <Route
-            path="/admin/users"
-            element={
-              <ProtectedRoute>
+            {/* Admin Restricted Routes */}
+            <Route
+              path="/admin/users"
+              element={
                 <AdminRoute>
                   <UserManagement />
                 </AdminRoute>
-              </ProtectedRoute>
-            }
-          />
+              }
+            />
+          </Route>
 
           {/* Root Redirect */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
