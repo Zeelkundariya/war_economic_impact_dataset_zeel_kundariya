@@ -6,6 +6,9 @@ const {
   adminDeleteConflict,
   adminUpdateConflict,
   getAdminDashboard,
+  getAllUsers,
+  updateUserRole,
+  deleteUserByAdmin,
 } = require('../controllers/adminController');
 const { protect, admin } = require('../middlewares/authMiddleware');
 const { adminDashboardLimiter } = require('../middlewares/rateLimitMiddleware');
@@ -31,5 +34,10 @@ router.route('/conflicts/:conflictId')
 
 // GET /admin/dashboard
 router.get('/dashboard', adminDashboardLimiter, getAdminDashboard);
+
+// User Management Routes
+router.get('/users', getAllUsers);
+router.put('/users/:id/role', updateUserRole);
+router.delete('/users/:id', deleteUserByAdmin);
 
 module.exports = router;

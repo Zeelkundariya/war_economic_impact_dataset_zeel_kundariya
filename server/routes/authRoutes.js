@@ -9,6 +9,7 @@ const {
   refreshToken,
   getMe,
   deleteAccount,
+  updateUserProfile,
 } = require('../controllers/authController');
 const { protect } = require('../middlewares/authMiddleware');
 const { loginLimiter, registerLimiter } = require('../middlewares/rateLimitMiddleware');
@@ -29,6 +30,7 @@ router.head('/me', protect, (req, res) => {
   res.status(200).end();
 });
 router.get('/me', protect, getMe);
+router.put('/profile', protect, updateUserProfile);
 router.delete('/account', protect, deleteAccount);
 
 module.exports = router;
