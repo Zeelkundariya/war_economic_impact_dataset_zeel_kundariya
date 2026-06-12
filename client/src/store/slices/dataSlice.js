@@ -141,6 +141,45 @@ export const deleteConflict = createAsyncThunk(
   }
 );
 
+// Async Thunk: Fetch Users List (Admin Only)
+export const fetchUsers = createAsyncThunk(
+  'data/fetchUsers',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get('/admin/users');
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Failed to fetch users list');
+    }
+  }
+);
+
+// Async Thunk: Update User Role (Admin Only)
+export const updateUserRole = createAsyncThunk(
+  'data/updateUserRole',
+  async ({ id, isAdmin }, { rejectWithValue }) => {
+    try {
+      const response = await api.put(`/admin/users/${id}/role`, { isAdmin });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Failed to update user role');
+    }
+  }
+);
+
+// Async Thunk: Delete User (Admin Only)
+export const deleteUser = createAsyncThunk(
+  'data/deleteUser',
+  async (id, { rejectWithValue }) => {
+    try {
+      await api.delete(`/admin/users/${id}`);
+      return id;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Failed to delete user');
+    }
+  }
+);
+
 const initialState = {
   conflicts: [],
   selectedConflict: null,
@@ -151,6 +190,7 @@ const initialState = {
   error: null,
   dashboardStats: null,
   statsLoading: false,
+  users: [],
   filters: {
     sort: '',
     keyword: '',
@@ -240,6 +280,29 @@ const dataSlice = createSlice({
       // Delete Conflict
       .addCase(deleteConflict.fulfilled, (state, action) => {
         state.conflicts = state.conflicts.filter((item) => item._id !== action.payload);
+      })
+      // Fetch Users
+      .addCase(fetchUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = action.payload;
+      })
+      .addCase(fetchUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Update User Role
+      .addCase(updateUserRole.fulfilled, (state, action) => {
+        state.users = state.users.map((u) =>
+          u._id === action.payload._id ? action.payload : u
+        );
+      })
+      // Delete User
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.users = state.users.filter((u) => u._id !== action.payload);
       });
   }
 });
