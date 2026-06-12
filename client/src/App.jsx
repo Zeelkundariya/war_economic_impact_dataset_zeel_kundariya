@@ -5,6 +5,8 @@ import { fetchCurrentUser, logout } from './store/slices/authSlice';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 import Layout from './components/Layout';
+import ThemeProviderWrapper from './components/ThemeProviderWrapper';
+import ToastNotification from './components/ToastNotification';
 
 // Lazy loading pages
 const Login = lazy(() => import('./pages/Login'));
@@ -51,46 +53,49 @@ function App() {
   }, [dispatch, token]);
 
   return (
-    <Router>
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+    <ThemeProviderWrapper>
+      <Router>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-          {/* Protected Dashboard Routes */}
-          <Route
-            element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }
-          >
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/conflicts" element={<Conflicts />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings />} />
-
-            {/* Admin Restricted Routes */}
+            {/* Protected Dashboard Routes */}
             <Route
-              path="/admin/users"
               element={
-                <AdminRoute>
-                  <UserManagement />
-                </AdminRoute>
+                <ProtectedRoute>
+                  <Layout />
+                </ProtectedRoute>
               }
-            />
-          </Route>
+            >
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/conflicts" element={<Conflicts />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/settings" element={<Settings />} />
 
-          {/* Root Redirect */}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              {/* Admin Restricted Routes */}
+              <Route
+                path="/admin/users"
+                element={
+                  <AdminRoute>
+                    <UserManagement />
+                  </AdminRoute>
+                }
+              />
+            </Route>
 
-          {/* Fallback 404 Route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
-    </Router>
+            {/* Root Redirect */}
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+            {/* Fallback 404 Route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+        <ToastNotification />
+      </Router>
+    </ThemeProviderWrapper>
   );
 }
 
