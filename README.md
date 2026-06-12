@@ -1,13 +1,16 @@
 <div align="center">
 
-# 🚀 War Economic Impact Analysis API
+# 🚀 Geopolitical & War Economic Impact Analysis Dashboard
 
-### **A high-performance, production-grade backend ecosystem for real-time tracking and predictive analysis of global conflict economics.**
+### **A production-grade, full-stack analytical platform for real-time tracking, macroeconomic correlation, and geopolitical crisis management.**
 
-[![Node.js Version](https://img.shields.io/badge/Node.js-v18.0.0-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![React](https://img.shields.io/badge/React-v19.0-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-v8.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev/)
+[![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS_v4-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Redux Toolkit](https://img.shields.io/badge/Redux_Toolkit-764ABC?style=for-the-badge&logo=redux&logoColor=white)](https://redux-toolkit.js.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-v18.0.0-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![Express.js](https://img.shields.io/badge/Express.js-v5.2.1-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-v6.0-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-[![JWT](https://img.shields.io/badge/JWT-Authentication-black?style=for-the-badge&logo=jsonwebtokens&logoColor=white)](https://jwt.io/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-v8.2-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
 ---
@@ -16,131 +19,32 @@
 
 </div>
 
+---
+
 ## 📌 Project Overview
 
-**War Economic Impact Analysis** is a comprehensive full-stack platform designed to analyze, visualize, and track the economic consequences of historical and ongoing conflicts. By processing a real-world dataset of **300,000+ conflict records**, the system provides deep insights into how wars affect global GDP, inflation, poverty, and unemployment rates.
+**War Economic Impact Analysis** is a comprehensive full-stack ecosystem designed to analyze, visualize, and track the economic consequences of global conflicts. By processing a massive dataset, the system provides deep insights into how geopolitical crises correlate with major macroeconomic shifts: GDP contractions, hyperinflation spikes, poverty rates, reconstruction costs, and labor market shocks.
 
-The system is engineered to provide researchers, students, and policymakers with a structured, high-fidelity way to explore the economic devastation caused by warfare across different regions and time periods.
-
----
-
-## 🎯 Objectives
-
--   **Scalable Architecture**: Build a robust RESTful API system using Node.js and Express.js.
--   **High-Performance Schema**: Design an optimized MongoDB schema capable of handling massive economic datasets.
--   **Advanced Discovery**: Implement multi-parameter filtering and complex regex-based search.
--   **Data-Driven Analytics**: Provide trending insights and peak impact data for conflicts.
--   **Security First**: Ensure secure user management and admin protection using JWT and Bcrypt.
--   **Clean Code Standards**: Strictly follow the MVC architecture and industry-standard best practices.
+The project consists of a high-performance **Express/MongoDB REST API** and a stunning, responsive **React + Vite Dashboard client** utilizing glassmorphism aesthetics, dark mode synchronization, and interactive Recharts visualizations.
 
 ---
 
-## ❓ Problem Statement
+## 💡 Key Full-Stack Features
 
-Understanding the long-term economic damage of war is difficult due to:
--   ❌ **Scattered Data**: Economic statistics are often fragmented across multiple unorganized reports.
--   ❌ **Poor Visualization**: Hard to compare how different conflicts impact specific sectors (e.g., Agriculture vs. Energy).
--   ❌ **Lack of Searchability**: No centralized way to search for conflicts by specific inflation rates or reconstruction costs.
--   ❌ **No Predictive Context**: Difficult to identify "high-risk" zones or identifying recurring economic collapse trends.
+### 💻 Client Dashboard (React, Tailwind v4, MUI, Redux Toolkit, Recharts)
+- **SaaS-Style Dashboard Overview:** Real-time KPI summaries of total conflicts, active crises, resolved events, and peak damage. Features an Area Chart of the top 10 most expensive conflicts, coupled with a Geopolitical Hazard side-panel.
+- **Deep-Dive Analytics Matrix:** 4 high-fidelity interactive visual charts mapping regional conflict distribution, cost vs. reconstruction bar comparisons, GDP collapse vs. inflation scatter plots, and conflict type pie/donut compositions.
+- **Database Table Grid:** Paginated conflict listings supporting keyword search, region filters, status filters, and 9 custom query sort options.
+- **Formik + Yup Validated CRUD Modals:** Integrated modals for creating and editing database entries with complete input validations, alongside unrecoverable soft-delete warning modals.
+- **User Settings & Diagnostics:** Light/Dark theme toggling, default row limit config, and real-time backend connection latency ping diagnostic checking.
+- **Admin User Management:** Restricted table grid for system administrators to toggle admin privileges or permanently revoke analyst accounts.
 
----
-
-## 💡 Solution
-
-This project centralizes war-related economic data into a structured knowledge base where users can:
--   ✅ **Browse Conflicts**: Explore detailed records of World Wars, Civil Wars, and Interstate conflicts.
--   ✅ **Analyze Impact**: View detailed metrics on inflation, currency devaluation, and poverty spikes.
--   ✅ **Advanced Filtering**: Filter by region, country, status (Ongoing/Resolved), and specific economic thresholds.
--   ✅ **Analytics Dashboard**: Identify the highest war costs and reconstruction requirements globally.
--   ✅ **Proactive Security**: Protect sensitive administrative actions with robust JWT authentication.
-
----
-
-## 🛠 Tech Stack
-
-| Technology | Purpose |
-| :--- | :--- |
-| **React & Vite** | Frontend Library & Build Tool |
-| **Tailwind CSS** | Styling System |
-| **Material UI (MUI)** | UI Component Library |
-| **Redux Toolkit** | State Management |
-| **Axios** | API Communication Service |
-| **Node.js** | Backend Runtime Environment |
-| **Express.js** | Web Framework |
-| **MongoDB** | Primary Database |
-| **Mongoose** | ODM for Data Modeling |
-| **JWT & Bcrypt** | Authentication & Password Hashing |
-| **Morgan & Cors**| Request Logging & Security |
-
----
-
-## ✨ Key Features
-
--   👤 **Advanced User Management**: Secure registration/login and profile handling.
--   📊 **Real-time Analytics**: Dynamic calculation of high-impact conflict metrics.
--   🏗️ **MVC Layered Architecture**: Clean separation of routes, controllers, and models.
--   📥 **Automated Bulk Ingestion**: Custom seeder script for processing 300k+ records.
--   📈 **Predictive Logic**: (Planned) Identifying economic trends and risk zones.
--   🛡️ **Safety Features**: Soft delete functionality and global error handling.
-
----
-
-## 🧠 Dataset Structure
-
-The application processes a massive JSON dataset with records structured as follows:
-
-```json
-{
-  "Conflict_Name": "Syrian Civil War",
-  "Conflict_Type": "Civil War",
-  "Region": "Middle East",
-  "Start_Year": "2011",
-  "End_Year": "2026",
-  "Status": "Ongoing",
-  "Primary_Country": "Syria",
-  "GDP_Change_%": "-34.81",
-  "Inflation_Rate_%": "55.45",
-  "Cost_of_War_USD": "114215767997",
-  "Estimated_Reconstruction_Cost_USD": "178638357922"
-}
-```
-
----
-
-## 🗄️ Database Schema Design
-
-The MongoDB schema is optimized for analytical queries and high-speed retrieval:
-
-```javascript
-{
-  Conflict_Name: String,
-  Conflict_Type: String,
-  Region: String,
-  Start_Year: String,
-  End_Year: String,
-  Status: String,
-  Primary_Country: String,
-  Economic_Metrics: {
-    GDP_Change: Number,
-    Inflation_Rate: Number,
-    Currency_Devaluation: Number
-  },
-  Social_Impact: {
-    Poverty_Rate: Number,
-    Food_Insecurity: Number,
-    Unemployment_Rate: Number
-  },
-  Financials: {
-    Cost_of_War: Number,
-    Reconstruction_Cost: Number
-  }
-}
-```
-
-### ✅ Key Design Decisions
--   **Hybrid Storage**: Core economic metrics are embedded within the conflict document for sub-second retrieval.
--   **Advanced Indexing**: Compound indexes on `Region`, `Status`, and `Conflict_Type`.
--   **Stateless Auth**: JWT implementation ensuring the backend is ready for horizontal scaling.
+### ⚙️ Backend REST API (Node.js, Express, Mongoose)
+- **Custom In-Memory Rate Limiting:** High-fidelity rate limiters targeting endpoint abuses: `/auth/login`, `/auth/register`, `/conflicts`, `/search`, and `/admin`.
+- **CORS Pre-Flight OPTIONS Handshake:** Fully custom OPTIONS responses for pre-flight safety mapping allowed HTTP methods on routes.
+- **Metadata HEAD Requests:** Sub-second metadata endpoints returning headers like `X-Total-Count`, `Last-Modified`, `X-Session-Active`, and `X-API-Health`.
+- **Advanced Sorting & Search Routing:** Standalone, optimized routes for versioned search queries (conflicts, economic metrics, sectors, black-market goods) and 9 specific query sorting parameters.
+- **Security & Authorization:** Token-based JWT authentication with auth interceptors on client Axios instances.
 
 ---
 
@@ -148,47 +52,74 @@ The MongoDB schema is optimized for analytical queries and high-speed retrieval:
 
 ```text
 war_economic_impact/
-├── client/              # React + Vite Frontend
+├── client/                     # React + Vite Frontend
 │   ├── src/
-│   │   ├── components/  # Reusable UI elements
-│   │   ├── pages/       # Dashboard & Auth Screens
-│   │   ├── services/    # Axios API layer
-│   │   └── store/       # Redux Toolkit State Management
-│   └── package.json
-└── server/              # Node + Express Backend
-    ├── config/          # DB connection setup
-    ├── controllers/     # Controller logics
-    ├── models/          # Mongoose database models
-    ├── routes/          # API route definitions
-    └── seeder.js        # Seed script (300k records)
+│   │   ├── components/         # Layouts, Theme Wrappers, Modals, Navbars, Sidebars
+│   │   ├── pages/              # Dashboard, Conflicts, Analytics, Profile, Settings, UserManagement
+│   │   ├── services/           # Axios API configuration & JWT interceptors
+│   │   ├── store/              # Redux slices (authSlice, dataSlice, uiSlice)
+│   │   ├── App.jsx             # React Router routing tree & Route Guards
+│   │   ├── index.css           # Tailwind base styles
+│   │   └── main.jsx            # React root mount
+│   └── README.md               # Frontend setup documentation
+└── server/                     # Node.js + Express Backend
+    ├── config/                 # MongoDB connection setup
+    ├── controllers/            # API Route Controllers (auth, conflicts, admin, jwt)
+    ├── middlewares/            # Auth guards & Custom rate limiters
+    ├── models/                 # Mongoose schemas (User, Conflict)
+    ├── routes/                 # Express route mounts
+    ├── seeder.js               # Data importing script
+    └── server.js               # Express server entry point
 ```
 
 ---
 
 ## ⚙️ API Overview
 
-### 🔐 Authentication
-| Method | Endpoint | Description | Access |
-| :--- | :--- | :--- | :--- |
-| POST | `/api/v1/auth/register` | User Registration | Public |
-| POST | `/api/v1/auth/login` | Secure Login & Token | Public |
+### 🔐 Authentication & Session
+| Method | Endpoint | Description | Access | Rate Limit |
+| :--- | :--- | :--- | :--- | :--- |
+| POST | `/api/v1/auth/register` | User Registration | Public | 5 req / 15m |
+| POST | `/api/v1/auth/login` | Secure JWT Login | Public | 5 req / 15m |
+| GET | `/api/v1/auth/me` | Fetch Current Profile | Protected | Standard |
+| PUT | `/api/v1/auth/profile` | Update Account Details | Protected | Standard |
+| DELETE | `/api/v1/auth/account` | Delete Own Account | Protected | Standard |
+| HEAD | `/api/v1/auth/me` | Retrieve Session Status | Protected | Standard |
 
-### 📌 Conflicts (CRUD)
-| Method | Endpoint | Description | Access |
-| :--- | :--- | :--- | :--- |
-| GET | `/api/v1/conflicts` | Fetch all conflicts (paginated) | Public |
-| GET | `/api/v1/conflicts/:id` | Fetch single conflict details | Public |
-| POST | `/api/v1/conflicts` | Add new record | Private |
-| PUT | `/api/v1/conflicts/:id` | Replace full record | Private |
-| DELETE | `/api/v1/conflicts/:id` | Remove record (Soft delete) | Private |
+### 📌 Conflict Database CRUD
+| Method | Endpoint | Description | Access | Rate Limit |
+| :--- | :--- | :--- | :--- | :--- |
+| GET | `/api/v1/conflicts` | Fetch paginated conflicts | Public | 100 req / 15m |
+| POST | `/api/v1/conflicts` | Create a new conflict entry | Protected | 100 req / 15m |
+| PUT | `/api/v1/conflicts/:id` | Update full conflict entry | Protected | 100 req / 15m |
+| DELETE | `/api/v1/conflicts/:id` | Remove record (Soft delete) | Protected | 100 req / 15m |
+| HEAD | `/api/v1/conflicts` | Get total count header | Public | Standard |
+| HEAD | `/api/v1/conflicts/:id` | Get last modified header | Public | Standard |
 
-### 🔍 Search & Filter
-- `GET /api/v1/search?q=keyword` - Search across names and countries
-- `GET /api/v1/conflicts?region=Europe&status=Ongoing` - Multi-parameter filtering
+### 🔍 Search & Specialized Sort
+| Method | Endpoint | Description | Access | Rate Limit |
+| :--- | :--- | :--- | :--- | :--- |
+| GET | `/api/v1/search/conflicts` | Search by country, region, type, status | Public | 30 req / 15m |
+| GET | `/api/v1/search/economic` | Search by inflation, poverty, GDP bounds | Public | 30 req / 15m |
+| GET | `/api/v1/search/sector` | Search by affected economic sector | Public | 30 req / 15m |
+| GET | `/api/v1/search/black-market`| Search by traded black-market goods | Public | 30 req / 15m |
+| GET | `/api/v1/conflicts?sort=GDP_Change_%` | Sort by GDP change, inflation, costs | Public | 100 req / 15m |
 
-### 📊 Statistics
-- `GET /api/v1/stats/total` - Summary of all records
-- `GET /api/v1/stats/highest-impact` - Peak economic damage data
+### 📊 Aggregates & Diagnostics
+| Method | Endpoint | Description | Access | Rate Limit |
+| :--- | :--- | :--- | :--- | :--- |
+| GET | `/api/v1/stats/total-conflicts`| Get total count statistic | Public | Standard |
+| GET | `/api/v1/stats/highest-war-cost`| Get peak war cost record | Public | Standard |
+| GET | `/api/v1/health` | API & MongoDB Health Check | Public | Standard |
+| HEAD | `/api/v1/health` | Diagnostics head request | Public | Standard |
+
+### 👑 Admin User Management
+| Method | Endpoint | Description | Access | Rate Limit |
+| :--- | :--- | :--- | :--- | :--- |
+| GET | `/api/v1/admin/users` | List all user accounts | Admin | Standard |
+| PUT | `/api/v1/admin/users/:id/role`| Toggle admin privilege status | Admin | Standard |
+| DELETE | `/api/v1/admin/users/:id` | Permanent user account deletion | Admin | Standard |
+| GET | `/api/v1/admin/dashboard` | Aggregated monetary totals stats | Admin | 10 req / 15m |
 
 ---
 
@@ -196,49 +127,54 @@ war_economic_impact/
 
 ### 1️⃣ Clone Repository
 ```bash
-git clone https://github.com/zeel-k/war_economic_impact.git
-cd war_economic_impact
+git clone https://github.com/Zeelkundariya/war_economic_impact_dataset_zeel_kundariya.git
+cd war_economic_impact_dataset_zeel_kundariya
 ```
 
-### 2️⃣ Backend Installation & Startup
-```bash
-cd server
-npm install
-# Configure env variables (MONGO_URI, JWT_SECRET, PORT=5000 in .env file inside server/)
-npm run dev
-```
+### 2️⃣ Initialize Database
+Ensure local MongoDB server is installed.
+1. Create a local database folder to avoid system pollution:
+   ```bash
+   mkdir db
+   ```
+2. Start MongoDB:
+   ```bash
+   mongod --dbpath ./db
+   ```
 
-### 3️⃣ Frontend Installation & Startup
-```bash
-cd ../client
-npm install
-npm run dev
-```
+### 3️⃣ Backend Setup & Seed Data
+1. Navigate to the server folder and install dependencies:
+   ```bash
+   cd server
+   npm install
+   ```
+2. Configure environmental variables inside a `.env` file in the `server/` directory:
+   ```env
+   PORT=5000
+   MONGO_URI=mongodb://localhost:27017/war_economic_impact
+   JWT_SECRET=mysecretkey123
+   NODE_ENV=development
+   ```
+3. Import seed data (populated with mock database records):
+   ```bash
+   npm run data:import
+   ```
+4. Start the backend:
+   ```bash
+   npm run dev
+   ```
 
-### 4️⃣ Data Import Strategy (Optional)
-Run the seeder from the server directory to process the 300k records:
-```bash
-cd ../server
-npm run data:import
-```
-- **Bulk Insertion**: Uses `insertMany()` for high-speed seeding.
-- **Validation**: Strict schema validation during parsing.
-
----
-
-## 🧪 Testing & Optimization
--   **Postman**: Comprehensive testing for all endpoints. Access the live [Postman Collection Documentation](https://documenter.getpostman.com/view/50840741/2sBXwmPYBh) directly to explore and test all API routes.
--   **Stress Testing**: Handling large data queries with optimized pagination.
--   **Lean Queries**: Using `.lean()` in Mongoose for read-only operations.
-
-## ⚠️ Challenges Faced
--   Normalizing a massive dataset with varying data points.
--   Optimizing queries to handle 300,000+ records without latency.
--   Balancing between embedded and referenced data structures for performance.
-
-## 🔮 Future Improvements
--   **AI Integration**: Predictive economic trend modeling.
--   **Interactivity**: Real-time map visualization for global impact.
+### 4️⃣ Frontend Dashboard Setup
+1. Navigate to the client folder and install dependencies:
+   ```bash
+   cd ../client
+   npm install
+   ```
+2. Start the development server (proxies `/api` routes automatically to port `5000`):
+   ```bash
+   npm run dev
+   ```
+3. Open your browser and navigate to **[http://localhost:5173/](http://localhost:5173/)**.
 
 ---
 
@@ -246,6 +182,6 @@ npm run data:import
 
 ### Built with ❤️ by [Zeel Kundariya](https://github.com/Zeelkundariya)
 
-**[↑ Back to Top](#-war-economic-impact-analysis-api)**
+**[↑ Back to Top](#-geopolitical--war-economic-impact-analysis-dashboard)**
 
 </div>
