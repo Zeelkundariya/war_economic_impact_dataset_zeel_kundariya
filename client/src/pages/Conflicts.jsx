@@ -1,8 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchConflicts, setFilters, setPage, setLimit, resetFilters } from '../store/slices/dataSlice';
+import {
+  fetchConflicts,
+  setFilters,
+  setPage,
+  setLimit,
+  resetFilters,
+  createConflict,
+  updateConflict,
+  deleteConflict
+} from '../store/slices/dataSlice';
 import { showToast } from '../store/slices/uiSlice';
 import { Search, Filter, RefreshCw, ChevronLeft, ChevronRight, Edit2, Trash2, Plus, Info } from 'lucide-react';
+import ConflictModal from '../components/ConflictModal';
+import DeleteConfirmModal from '../components/DeleteConfirmModal';
 
 const Conflicts = () => {
   const dispatch = useDispatch();
@@ -11,6 +22,13 @@ const Conflicts = () => {
 
   // Local state for search query input to avoid dispatching on every keystroke
   const [keywordInput, setKeywordInput] = useState(filters.keyword || '');
+
+  // Local state for CRUD modals
+  const [isCrudModalOpen, setIsCrudModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState('create'); // 'create' | 'edit'
+  const [activeConflict, setActiveConflict] = useState(null);
+  const [actionLoading, setActionLoading] = useState(false);
 
   // Fetch data on page, limit, or filter changes
   useEffect(() => {
@@ -39,6 +57,39 @@ const Conflicts = () => {
     dispatch(showToast({ message: 'Filters reset successfully', severity: 'info' }));
   };
 
+  const handleCrudSubmit = async (values) => {
+    setActionLoading(true);
+    try {
+      if (modalMode === 'create') {
+        await dispatch(createConflict(values)).unwrap();
+        dispatch(showToast({ message: 'Conflict entry created successfully!', severity: 'success' }));
+      } else {
+        await dispatch(updateConflict({ id: activeConflict._id, conflictData: values })).unwrap();
+        dispatch(showToast({ message: 'Conflict entry updated successfully!', severity: 'success' }));
+      }
+      setIsCrudModalOpen(false);
+      dispatch(fetchConflicts({ page, limit, ...filters }));
+    } catch (err) {
+      dispatch(showToast({ message: err || 'Action failed', severity: 'error' }));
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleDeleteConfirm = async () => {
+    setActionLoading(true);
+    try {
+      await dispatch(deleteConflict(activeConflict._id)).unwrap();
+      dispatch(showToast({ message: 'Conflict entry deleted successfully!', severity: 'success' }));
+      setIsDeleteModalOpen(false);
+      dispatch(fetchConflicts({ page, limit, ...filters }));
+    } catch (err) {
+      dispatch(showToast({ message: err || 'Deletion failed', severity: 'error' }));
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Top Header Section */}
@@ -50,10 +101,14 @@ const Conflicts = () => {
           </p>
         </div>
         
-        {/* Add Entry Button placeholder (functional in Step 10) */}
+        {/* Add Entry Button */}
         <button
-          onClick={() => dispatch(showToast({ message: 'Create Modal will open in Step 10!', severity: 'info' }))}
-          className="flex items-center px-4 py-2.5 bg-violet-600 hover:bg-violet-755 text-white font-semibold rounded-xl shadow-lg shadow-violet-500/10 transition cursor-pointer"
+          onClick={() => {
+            setActiveConflict(null);
+            setModalMode('create');
+            setIsCrudModalOpen(true);
+          }}
+          className="flex items-center px-4 py-2.5 bg-violet-600 hover:bg-violet-700 text-white font-semibold rounded-xl shadow-lg shadow-violet-500/10 transition cursor-pointer"
         >
           <Plus className="h-5 w-5 mr-1.5" />
           Add Record
@@ -235,14 +290,21 @@ const Conflicts = () => {
                     <td className="px-6 py-4 text-center">
                       <div className="flex items-center justify-center gap-1.5">
                         <button
-                          onClick={() => dispatch(showToast({ message: 'Edit action will trigger modal in Step 10!', severity: 'info' }))}
+                          onClick={() => {
+                            setActiveConflict(conflict);
+                            setModalMode('edit');
+                            setIsCrudModalOpen(true);
+                          }}
                           className="p-1.5 text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition cursor-pointer"
                           title="Edit Record"
                         >
                           <Edit2 className="h-4 w-4" />
                         </button>
                         <button
-                          onClick={() => dispatch(showToast({ message: 'Delete action will trigger modal in Step 10!', severity: 'info' }))}
+                          onClick={() => {
+                            setActiveConflict(conflict);
+                            setIsDeleteModalOpen(true);
+                          }}
                           className="p-1.5 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition cursor-pointer"
                           title="Delete Record"
                           disabled={role !== 'admin'}
@@ -297,6 +359,23 @@ const Conflicts = () => {
           </div>
         </div>
       </div>
+
+      {/* CRUD Modals */}
+      <ConflictModal
+        isOpen={isCrudModalOpen}
+        onClose={() => setIsCrudModalOpen(false)}
+        onSubmit={handleCrudSubmit}
+        conflict={activeConflict}
+        loading={actionLoading}
+      />
+
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        conflictName={activeConflict?.Conflict_Name || ''}
+        loading={actionLoading}
+      />
     </div>
   );
 };
