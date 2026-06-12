@@ -33,25 +33,31 @@ app.get('/', (req, res) => {
 app.use('/api/v1/search', require('./routes/searchRoutes'));
 app.use('/search', require('./routes/searchRoutes'));
 
-app.head('/health', (req, res) => {
+const healthHeadHandler = (req, res) => {
   res.setHeader('X-API-Health', 'OK');
   res.status(200).end();
-});
+};
+app.head('/health', healthHeadHandler);
+app.head('/api/v1/health', healthHeadHandler);
 
-app.options('/health', (req, res) => {
+const healthOptionsHandler = (req, res) => {
   res.setHeader('Allow', 'GET, HEAD, OPTIONS');
   res.status(204).end();
-});
+};
+app.options('/health', healthOptionsHandler);
+app.options('/api/v1/health', healthOptionsHandler);
 
 // API Health Check
-app.get('/health', (req, res) => {
+const healthGetHandler = (req, res) => {
   res.status(200).json({
     status: 'OK',
     uptime: process.uptime(),
     timestamp: new Date(),
     database: mongoose.connection.readyState === 1 ? 'CONNECTED' : 'DISCONNECTED'
   });
-});
+};
+app.get('/health', healthGetHandler);
+app.get('/api/v1/health', healthGetHandler);
 
 // API Version
 app.get('/version', (req, res) => {
