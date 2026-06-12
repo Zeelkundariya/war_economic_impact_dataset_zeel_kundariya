@@ -60,15 +60,17 @@ This project centralizes war-related economic data into a structured knowledge b
 
 | Technology | Purpose |
 | :--- | :--- |
-| **Node.js** | Runtime Environment |
+| **React & Vite** | Frontend Library & Build Tool |
+| **Tailwind CSS** | Styling System |
+| **Material UI (MUI)** | UI Component Library |
+| **Redux Toolkit** | State Management |
+| **Axios** | API Communication Service |
+| **Node.js** | Backend Runtime Environment |
 | **Express.js** | Web Framework |
 | **MongoDB** | Primary Database |
 | **Mongoose** | ODM for Data Modeling |
-| **JWT** | Secure Authentication |
-| **Bcrypt.js** | Password Hashing |
-| **Morgan** | HTTP Request Logging |
-| **Dotenv** | Environment Configuration |
-| **Cors** | Cross-Origin Security |
+| **JWT & Bcrypt** | Authentication & Password Hashing |
+| **Morgan & Cors**| Request Logging & Security |
 
 ---
 
@@ -146,15 +148,19 @@ The MongoDB schema is optimized for analytical queries and high-speed retrieval:
 
 ```text
 war_economic_impact/
-└── server/
-    ├── config/         # Database & environment configurations
-    ├── controllers/    # Request handlers & logic
-    ├── models/         # Mongoose schemas
-    ├── routes/         # API Endpoint definitions
-    ├── middlewares/    # Auth & error management
-    ├── services/       # Data processing & analytics
-    ├── seeder.js       # Data import script
-    └── dataset.json    # Source Data (300k records)
+├── client/              # React + Vite Frontend
+│   ├── src/
+│   │   ├── components/  # Reusable UI elements
+│   │   ├── pages/       # Dashboard & Auth Screens
+│   │   ├── services/    # Axios API layer
+│   │   └── store/       # Redux Toolkit State Management
+│   └── package.json
+└── server/              # Node + Express Backend
+    ├── config/          # DB connection setup
+    ├── controllers/     # Controller logics
+    ├── models/          # Mongoose database models
+    ├── routes/          # API route definitions
+    └── seeder.js        # Seed script (300k records)
 ```
 
 ---
@@ -191,25 +197,28 @@ war_economic_impact/
 ### 1️⃣ Clone Repository
 ```bash
 git clone https://github.com/zeel-k/war_economic_impact.git
+cd war_economic_impact
 ```
 
-### 2️⃣ Install Dependencies
+### 2️⃣ Backend Installation & Startup
 ```bash
 cd server
 npm install
+# Configure env variables (MONGO_URI, JWT_SECRET, PORT=5000 in .env file inside server/)
+npm run dev
 ```
 
-### 3️⃣ Setup Environment Variables
-Create a `.env` file in the root:
-```env
-PORT=5000
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_secret_key
-```
-
-### 4️⃣ Data Import Strategy
-Run the seeder to process the 300k records:
+### 3️⃣ Frontend Installation & Startup
 ```bash
+cd ../client
+npm install
+npm run dev
+```
+
+### 4️⃣ Data Import Strategy (Optional)
+Run the seeder from the server directory to process the 300k records:
+```bash
+cd ../server
 npm run data:import
 ```
 - **Bulk Insertion**: Uses `insertMany()` for high-speed seeding.
