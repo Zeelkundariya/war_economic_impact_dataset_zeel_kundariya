@@ -24,9 +24,9 @@ export const fetchDashboardStats = createAsyncThunk(
       );
 
       return {
-        totalConflicts: responses[0].data?.count ?? 0,
-        ongoingConflicts: responses[1].data?.count ?? 0,
-        resolvedConflicts: responses[2].data?.count ?? 0,
+        totalConflicts: responses[0].data?.totalConflicts ?? responses[0].data?.count ?? 0,
+        ongoingConflicts: responses[1].data?.ongoingConflicts ?? responses[1].data?.count ?? 0,
+        resolvedConflicts: responses[2].data?.resolvedConflicts ?? responses[2].data?.count ?? 0,
         highestInflation: responses[3].data,
         lowestGdp: responses[4].data,
         highestPoverty: responses[5].data,
