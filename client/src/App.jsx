@@ -1,21 +1,125 @@
-import React from 'react'
+import React, { useEffect, lazy, Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCurrentUser, logout } from './store/slices/authSlice';
+import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoute';
+
+// Lazy loading pages
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Conflicts = lazy(() => import('./pages/Conflicts'));
+const Analytics = lazy(() => import('./pages/Analytics'));
+const UserManagement = lazy(() => import('./pages/UserManagement'));
+const Profile = lazy(() => import('./pages/Profile'));
+const Settings = lazy(() => import('./pages/Settings'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+
+// Premium Loader Component
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
+    <div className="flex flex-col items-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-600 mb-4"></div>
+      <p className="text-slate-500 dark:text-slate-400 text-sm font-medium animate-pulse">
+        Loading workspace...
+      </p>
+    </div>
+  </div>
+);
 
 function App() {
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
+
+  // Auto-login session check on boot
+  useEffect(() => {
+    if (token) {
+      dispatch(fetchCurrentUser());
+    }
+
+    // Listener for auth-expired events dispatched from Axios response interceptors
+    const handleAuthExpired = () => {
+      dispatch(logout());
+    };
+
+    window.addEventListener('auth-expired', handleAuthExpired);
+    return () => {
+      window.removeEventListener('auth-expired', handleAuthExpired);
+    };
+  }, [dispatch, token]);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-300">
-      <div className="text-center p-8 glass-panel rounded-2xl shadow-xl max-w-md mx-4">
-        <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
-          War Economic Impact Dashboard
-        </h1>
-        <p className="text-slate-600 dark:text-slate-400 mb-6">
-          Vite + React + Tailwind v4 + MUI project structure successfully initialized.
-        </p>
-        <div className="inline-block px-4 py-2 bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 font-semibold rounded-lg text-sm">
-          Step 2 Completed: Bootstrap & Folder Layout
-        </div>
-      </div>
-    </div>
-  )
+    <Router>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          {/* Protected Dashboard Routes */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/conflicts"
+            element={
+              <ProtectedRoute>
+                <Conflicts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <ProtectedRoute>
+                <Analytics />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Admin Restricted Routes */}
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute>
+                <AdminRoute>
+                  <UserManagement />
+                </AdminRoute>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Root Redirect */}
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+          {/* Fallback 404 Route */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
+    </Router>
+  );
 }
 
-export default App
+export default App;
