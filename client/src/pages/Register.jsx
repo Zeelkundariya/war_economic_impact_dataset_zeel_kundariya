@@ -33,17 +33,17 @@ const Register = () => {
     },
     validationSchema: Yup.object({
       name: Yup.string()
-        .min(2, 'Name must be at least 2 characters')
-        .required('Name is required'),
+        .min(2, 'Full name must contain at least 2 characters')
+        .required('Please enter your full name to proceed'),
       email: Yup.string()
-        .email('Invalid email address')
-        .required('Email is required'),
+        .email('Please enter a valid business or personal email address')
+        .required('A valid email address is required for authentication'),
       password: Yup.string()
-        .min(6, 'Password must be at least 6 characters')
-        .required('Password is required'),
+        .min(6, 'Your password must contain at least 6 characters')
+        .required('A secure password is required to protect your account'),
       confirmPassword: Yup.string()
-        .oneOf([Yup.ref('password'), null], 'Passwords must match')
-        .required('Confirm password is required'),
+        .oneOf([Yup.ref('password'), null], 'Confirmation password must match your password')
+        .required('Please confirm your security password'),
     }),
     onSubmit: async (values) => {
       // Exclude confirmPassword from api payload
@@ -61,10 +61,10 @@ const Register = () => {
             <Shield className="text-white h-6 w-6" />
           </div>
           <h2 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
-            Conflict Economics API
+            Geopolitical Economics Suite
           </h2>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
-            Create an account to browse economic metrics
+            Initialize your analyst credentials to access global database panels
           </p>
         </div>
 
@@ -96,7 +96,7 @@ const Register = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.name}
-                  placeholder="John Doe"
+                  placeholder="Enter your full name"
                   className={`block w-full pl-10 pr-3 py-2 rounded-xl border bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all ${
                     formik.touched.name && formik.errors.name
                       ? 'border-rose-500 focus:ring-rose-500'
@@ -126,7 +126,7 @@ const Register = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.email}
-                  placeholder="name@company.com"
+                  placeholder="Enter email address (e.g. name@domain.com)"
                   className={`block w-full pl-10 pr-3 py-2 rounded-xl border bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all ${
                     formik.touched.email && formik.errors.email
                       ? 'border-rose-500 focus:ring-rose-500'
@@ -156,7 +156,7 @@ const Register = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.password}
-                  placeholder="••••••••"
+                  placeholder="Create a secure password (min 6 characters)"
                   className={`block w-full pl-10 pr-3 py-2 rounded-xl border bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all ${
                     formik.touched.password && formik.errors.password
                       ? 'border-rose-500 focus:ring-rose-500'
@@ -186,7 +186,7 @@ const Register = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.confirmPassword}
-                  placeholder="••••••••"
+                  placeholder="Re-enter password to verify"
                   className={`block w-full pl-10 pr-3 py-2 rounded-xl border bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all ${
                     formik.touched.confirmPassword && formik.errors.confirmPassword
                       ? 'border-rose-500 focus:ring-rose-500'
