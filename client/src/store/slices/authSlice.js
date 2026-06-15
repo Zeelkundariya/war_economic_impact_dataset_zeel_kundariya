@@ -7,14 +7,16 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await api.post('/auth/login', credentials);
-      const { token, user } = response.data;
+      const user = response.data;
+      const token = user.token;
+      const role = user.isAdmin ? 'admin' : 'user';
       
       // Store credentials in localStorage
       localStorage.setItem('authToken', token);
-      localStorage.setItem('userRole', user.role || 'user');
+      localStorage.setItem('userRole', role);
       localStorage.setItem('userEmail', user.email);
       
-      return { token, user };
+      return { token, user: { ...user, role } };
     } catch (error) {
       return rejectWithValue(error.message || 'Login failed');
     }
@@ -27,13 +29,15 @@ export const registerUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await api.post('/auth/register', userData);
-      const { token, user } = response.data;
+      const user = response.data;
+      const token = user.token;
+      const role = user.isAdmin ? 'admin' : 'user';
       
       localStorage.setItem('authToken', token);
-      localStorage.setItem('userRole', user.role || 'user');
+      localStorage.setItem('userRole', role);
       localStorage.setItem('userEmail', user.email);
       
-      return { token, user };
+      return { token, user: { ...user, role } };
     } catch (error) {
       return rejectWithValue(error.message || 'Registration failed');
     }
