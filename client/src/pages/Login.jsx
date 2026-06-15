@@ -34,11 +34,11 @@ const Login = () => {
     },
     validationSchema: Yup.object({
       email: Yup.string()
-        .email('Invalid email address')
-        .required('Email is required'),
+        .email('Please enter a valid business or personal email address')
+        .required('A valid email address is required for authentication'),
       password: Yup.string()
-        .min(6, 'Password must be at least 6 characters')
-        .required('Password is required'),
+        .min(6, 'Your password must contain at least 6 characters')
+        .required('Please enter your security password'),
     }),
     onSubmit: async (values) => {
       dispatch(loginUser(values));
@@ -54,10 +54,10 @@ const Login = () => {
             <Shield className="text-white h-6 w-6" />
           </div>
           <h2 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
-            Conflict Economics API
+            Geopolitical Economics Suite
           </h2>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
-            Sign in to access global analytics panels
+            Authenticate to access macroeconomic intelligence panels
           </p>
         </div>
 
@@ -89,7 +89,7 @@ const Login = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.email}
-                  placeholder="name@company.com"
+                  placeholder="Enter email address (e.g. name@domain.com)"
                   className={`block w-full pl-10 pr-3 py-2.5 rounded-xl border bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all ${
                     formik.touched.email && formik.errors.email
                       ? 'border-rose-500 focus:ring-rose-500'
@@ -119,7 +119,7 @@ const Login = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.password}
-                  placeholder="••••••••"
+                  placeholder="Enter your security password"
                   className={`block w-full pl-10 pr-3 py-2.5 rounded-xl border bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all ${
                     formik.touched.password && formik.errors.password
                       ? 'border-rose-500 focus:ring-rose-500'

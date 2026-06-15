@@ -7,14 +7,16 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await api.post('/auth/login', credentials);
-      const { token, user } = response.data;
+      const user = response.data;
+      const token = user.token;
+      const role = user.isAdmin ? 'admin' : 'user';
       
       // Store credentials in localStorage
       localStorage.setItem('authToken', token);
-      localStorage.setItem('userRole', user.role || 'user');
+      localStorage.setItem('userRole', role);
       localStorage.setItem('userEmail', user.email);
       
-      return { token, user };
+      return { token, user: { ...user, role } };
     } catch (error) {
       return rejectWithValue(error.message || 'Login failed');
     }
@@ -27,13 +29,15 @@ export const registerUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await api.post('/auth/register', userData);
-      const { token, user } = response.data;
+      const user = response.data;
+      const token = user.token;
+      const role = user.isAdmin ? 'admin' : 'user';
       
       localStorage.setItem('authToken', token);
-      localStorage.setItem('userRole', user.role || 'user');
+      localStorage.setItem('userRole', role);
       localStorage.setItem('userEmail', user.email);
       
-      return { token, user };
+      return { token, user: { ...user, role } };
     } catch (error) {
       return rejectWithValue(error.message || 'Registration failed');
     }
@@ -107,9 +111,9 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.token = action.payload.token;
-        state.role = action.payload.user.role || 'user';
-        state.user = action.payload.user;
+        state.token = action.payload?.token;
+        state.role = action.payload?.user?.role || 'user';
+        state.user = action.payload?.user;
         state.isAuthenticated = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -123,9 +127,9 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.token = action.payload.token;
-        state.role = action.payload.user.role || 'user';
-        state.user = action.payload.user;
+        state.token = action.payload?.token;
+        state.role = action.payload?.user?.role || 'user';
+        state.user = action.payload?.user;
         state.isAuthenticated = true;
       })
       .addCase(registerUser.rejected, (state, action) => {
@@ -138,8 +142,9 @@ const authSlice = createSlice({
       })
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user || action.payload;
-        state.role = action.payload.user?.role || action.payload.role || 'user';
+        state.user = action.payload?.user || action.payload;
+        const isAdmin = action.payload?.isAdmin || action.payload?.user?.isAdmin;
+        state.role = action.payload?.user?.role || action.payload?.role || (isAdmin ? 'admin' : 'user');
         state.isAuthenticated = true;
       })
       .addCase(fetchCurrentUser.rejected, (state, action) => {
@@ -158,7 +163,7 @@ const authSlice = createSlice({
       .addCase(updateUserProfile.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
-        if (action.payload.token) {
+        if (action.payload?.token) {
           state.token = action.payload.token;
         }
       })

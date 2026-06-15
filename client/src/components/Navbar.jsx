@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toggleSidebar, toggleTheme } from '../store/slices/uiSlice';
 import { logout } from '../store/slices/authSlice';
-import { Menu, Sun, Moon, LogOut, User, Shield, ChevronDown } from 'lucide-react';
+import { Menu, Sun, Moon, LogOut, User, Shield, ChevronDown, Settings } from 'lucide-react';
 
 const Navbar = () => {
   const dispatch = useDispatch();
