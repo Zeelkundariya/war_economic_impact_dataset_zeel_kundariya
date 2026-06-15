@@ -1,50 +1,77 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { showToast } from '../store/slices/uiSlice';
+import { showToast, toggleTheme } from '../store/slices/uiSlice';
 import api from '../services/api';
-import { 
-  Settings as SettingsIcon, 
-  Sun, 
-  Moon, 
-  Bell, 
-  Database, 
-  Radio, 
-  Check, 
-  Loader2, 
-  Wifi, 
-  HeartHandshake,
-  Activity
+import {
+  Settings as SettingsIcon, Sun, Moon, Bell, Database,
+  Radio, Loader2, Wifi, HeartHandshake, Activity,
+  CheckCircle2, Zap, Server, RefreshCw
 } from 'lucide-react';
+
+/* ── Premium Toggle ─────────────────────────────────────── */
+const PremiumToggle = ({ checked, onChange, id }) => (
+  <button
+    id={id}
+    type="button"
+    onClick={onChange}
+    className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-all duration-300 cursor-pointer focus:outline-none ${
+      checked ? 'bg-violet-600 shadow-lg shadow-violet-500/30' : 'bg-slate-200 dark:bg-slate-700'
+    }`}
+  >
+    <span className={`inline-block h-4 w-4 rounded-full bg-white shadow-md transition-transform duration-300 ${
+      checked ? 'translate-x-6' : 'translate-x-1'
+    }`} />
+  </button>
+);
+
+/* ── Settings Section Card ──────────────────────────────── */
+const SettingSection = ({ title, icon: Icon, iconColor, children, delay = 0 }) => (
+  <div
+    className="glass-panel rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-6 space-y-5 animate-fade-up"
+    style={{ animationDelay: `${delay}ms`, animationFillMode: 'both' }}
+  >
+    <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
+      <div className={`w-7 h-7 rounded-lg ${iconColor} flex items-center justify-center`}>
+        <Icon className="h-4 w-4" />
+      </div>
+      {title}
+    </h3>
+    {children}
+  </div>
+);
+
+/* ── Setting Row ────────────────────────────────────────── */
+const SettingRow = ({ label, description, control, border = false }) => (
+  <div className={`flex items-center justify-between gap-4 ${border ? 'pt-4 border-t border-slate-100 dark:border-slate-800' : ''}`}>
+    <div className="min-w-0">
+      <span className="block text-sm font-semibold text-slate-900 dark:text-white">{label}</span>
+      <span className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 block">{description}</span>
+    </div>
+    <div className="shrink-0">{control}</div>
+  </div>
+);
 
 const Settings = () => {
   const dispatch = useDispatch();
-  
-  // Theme check from local class list
-  const [isDarkMode, setIsDarkMode] = useState(
-    document.documentElement.classList.contains('dark')
-  );
+  const theme = useSelector((state) => state.ui.theme);
+  const isDarkMode = theme === 'dark';
 
-  // Settings local state
-  const [emailAlerts, setEmailAlerts] = useState(true);
+  const [emailAlerts,  setEmailAlerts]  = useState(true);
   const [hazardAlerts, setHazardAlerts] = useState(true);
-  const [defaultRows, setDefaultRows] = useState('10');
-  
-  // Diagnostic state
-  const [pinging, setPinging] = useState(false);
+  const [defaultRows,  setDefaultRows]  = useState('10');
+  const [pinging,      setPinging]      = useState(false);
   const [healthStatus, setHealthStatus] = useState(null);
-  const [latency, setLatency] = useState(null);
+  const [latency,      setLatency]      = useState(null);
 
-  // Run a real-time health diagnostics check
   const runDiagnostics = async () => {
     setPinging(true);
     const start = performance.now();
     try {
-      const response = await api.get('/health');
-      const end = performance.now();
-      setLatency(Math.round(end - start));
-      setHealthStatus(response.data?.status || 'OK');
-      dispatch(showToast({ message: 'Diagnostics check completed successfully!', severity: 'success' }));
-    } catch (error) {
+      const res = await api.get('/health');
+      setLatency(Math.round(performance.now() - start));
+      setHealthStatus(res.data?.status || 'OK');
+      dispatch(showToast({ message: 'Diagnostics completed successfully!', severity: 'success' }));
+    } catch {
       setHealthStatus('Error');
       setLatency(null);
       dispatch(showToast({ message: 'API connection diagnostics failed.', severity: 'error' }));
@@ -53,210 +80,190 @@ const Settings = () => {
     }
   };
 
-  useEffect(() => {
-    runDiagnostics();
-  }, []);
+  useEffect(() => { runDiagnostics(); }, []);
 
-  // Handle Theme Toggle
-  const toggleTheme = () => {
-    const root = document.documentElement;
-    if (isDarkMode) {
-      root.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-      setIsDarkMode(false);
-      dispatch(showToast({ message: 'Appearance changed to Light Mode', severity: 'info' }));
-    } else {
-      root.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-      setIsDarkMode(true);
-      dispatch(showToast({ message: 'Appearance changed to Dark Mode', severity: 'info' }));
-    }
-  };
-
-  // Save Settings simulation
   const handleSaveSettings = () => {
-    dispatch(showToast({ message: 'Preferences updated successfully!', severity: 'success' }));
+    dispatch(showToast({ message: 'Preferences saved successfully!', severity: 'success' }));
   };
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-          Workspace Settings
-        </h1>
-        <p className="text-slate-500 dark:text-slate-400 mt-1">
-          Configure visual parameters, notifications, and run system health diagnostics
+
+      {/* ── Header ────────────────────────────────────────── */}
+      <div className="animate-fade-up">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 text-[10px] font-bold uppercase tracking-widest">
+            <Zap className="h-3 w-3" /> Configuration
+          </span>
+        </div>
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Workspace Settings</h1>
+        <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">
+          Configure visual parameters, notifications, and system diagnostics
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        {/* Navigation Sidebar panel for settings sections */}
-        <div className="glass-panel p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-850/40 space-y-1.5 h-fit">
-          <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-3 py-2 block">
-            Settings Menu
-          </span>
-          <button className="w-full text-left px-3 py-2 rounded-xl text-sm font-semibold bg-violet-50 dark:bg-violet-950/20 text-violet-600 dark:text-violet-400 flex items-center space-x-2">
-            <SettingsIcon className="w-4 h-4" />
-            <span>General Preferences</span>
-          </button>
+
+        {/* ── Sidebar Nav ───────────────────────────────── */}
+        <div className="glass-panel rounded-2xl border border-slate-200/60 dark:border-slate-800/60 p-4 space-y-1 h-fit animate-fade-up delay-100">
+          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-3 py-2">Settings Menu</p>
+          {[
+            { icon: SettingsIcon, label: 'General Preferences', active: true },
+          ].map(({ icon: Icon, label, active }) => (
+            <button key={label}
+              className={`w-full text-left px-3 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2.5 transition-all duration-150 cursor-pointer ${
+                active
+                  ? 'bg-violet-50 dark:bg-violet-950/20 text-violet-600 dark:text-violet-400'
+                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+              }`}>
+              <Icon className="h-4 w-4" />{label}
+            </button>
+          ))}
         </div>
 
-        {/* Settings Form Content */}
-        <div className="md:col-span-2 space-y-6">
-          
-          {/* 1. Theme Configuration */}
-          <div className="glass-panel p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-850/40 space-y-4">
-            <h3 className="text-base font-bold text-slate-950 dark:text-white flex items-center space-x-2">
-              {isDarkMode ? <Moon className="w-5 h-5 text-indigo-400" /> : <Sun className="w-5 h-5 text-amber-500" />}
-              <span>Interface Appearance</span>
-            </h3>
-            
-            <div className="flex justify-between items-center py-2">
-              <div>
-                <span className="block text-sm font-semibold text-slate-900 dark:text-white">Dark Mode Theme</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400">Toggle default background theme for screen elements</span>
-              </div>
-              <button
-                onClick={toggleTheme}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer focus:outline-none ${
-                  isDarkMode ? 'bg-violet-600' : 'bg-slate-200'
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    isDarkMode ? 'translate-x-6' : 'translate-x-1'
-                  }`}
+        {/* ── Settings Content ──────────────────────────── */}
+        <div className="md:col-span-2 space-y-5">
+
+          {/* 1. Appearance */}
+          <SettingSection title="Interface Appearance" icon={isDarkMode ? Moon : Sun}
+            iconColor="bg-amber-50 dark:bg-amber-950/20 text-amber-500" delay={150}>
+            <SettingRow
+              label="Dark Mode Theme"
+              description="Toggle background theme for all interface elements"
+              control={
+                <PremiumToggle
+                  id="dark-mode-toggle"
+                  checked={isDarkMode}
+                  onChange={() => dispatch(toggleTheme())}
                 />
-              </button>
-            </div>
-          </div>
-
-          {/* 2. Notification Preferences */}
-          <div className="glass-panel p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-850/40 space-y-4">
-            <h3 className="text-base font-bold text-slate-950 dark:text-white flex items-center space-x-2">
-              <Bell className="w-5 h-5 text-violet-500" />
-              <span>Notification Subscriptions</span>
-            </h3>
-
-            {/* Email reports */}
-            <div className="flex justify-between items-center py-1">
-              <div>
-                <span className="block text-sm font-semibold text-slate-900 dark:text-white">Monthly Economic Digests</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400">Receive summary reports on global conflict costs</span>
-              </div>
-              <button
-                onClick={() => setEmailAlerts(!emailAlerts)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
-                  emailAlerts ? 'bg-violet-600' : 'bg-slate-200'
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    emailAlerts ? 'translate-x-6' : 'translate-x-1'
+              }
+            />
+            <div className="flex gap-3 pt-2">
+              {['Dark', 'Light'].map((mode) => (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={() => { if ((mode === 'Dark') !== isDarkMode) dispatch(toggleTheme()); }}
+                  className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer border ${
+                    (mode === 'Dark') === isDarkMode
+                      ? 'border-violet-500 bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400'
+                      : 'border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600'
                   }`}
-                />
-              </button>
+                >
+                  {mode === 'Dark' ? '🌙' : '☀️'} {mode} Mode
+                </button>
+              ))}
             </div>
+          </SettingSection>
 
-            {/* High Geopolitical hazard alerts */}
-            <div className="flex justify-between items-center py-1 border-t border-slate-100 dark:border-slate-800/80 pt-4">
-              <div>
-                <span className="block text-sm font-semibold text-slate-900 dark:text-white">Critical Macroeconomic Alerts</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400">Notify immediately when inflation or GDP collapse bounds trigger</span>
-              </div>
-              <button
-                onClick={() => setHazardAlerts(!hazardAlerts)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
-                  hazardAlerts ? 'bg-violet-600' : 'bg-slate-200'
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    hazardAlerts ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
-              </button>
-            </div>
-          </div>
+          {/* 2. Notifications */}
+          <SettingSection title="Notification Subscriptions" icon={Bell}
+            iconColor="bg-violet-50 dark:bg-violet-950/20 text-violet-500" delay={230}>
+            <SettingRow
+              label="Monthly Economic Digests"
+              description="Receive summary reports on global conflict costs"
+              control={<PremiumToggle id="email-alerts-toggle" checked={emailAlerts} onChange={() => setEmailAlerts(!emailAlerts)} />}
+            />
+            <SettingRow
+              label="Critical Macroeconomic Alerts"
+              description="Notify when inflation or GDP collapse bounds trigger"
+              border
+              control={<PremiumToggle id="hazard-alerts-toggle" checked={hazardAlerts} onChange={() => setHazardAlerts(!hazardAlerts)} />}
+            />
+          </SettingSection>
 
-          {/* 3. Grid Table Configurations */}
-          <div className="glass-panel p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-850/40 space-y-4">
-            <h3 className="text-base font-bold text-slate-950 dark:text-white flex items-center space-x-2">
-              <Database className="w-5 h-5 text-cyan-500" />
-              <span>Workspace Parameters</span>
-            </h3>
+          {/* 3. Workspace Parameters */}
+          <SettingSection title="Workspace Parameters" icon={Database}
+            iconColor="bg-cyan-50 dark:bg-cyan-950/20 text-cyan-500" delay={310}>
+            <SettingRow
+              label="Default Page Limits"
+              description="Rows loaded by default on database listings"
+              control={
+                <select
+                  id="default-rows-select"
+                  value={defaultRows}
+                  onChange={(e) => setDefaultRows(e.target.value)}
+                  className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-violet-500/40 transition cursor-pointer"
+                >
+                  <option value="5">5 rows</option>
+                  <option value="10">10 rows</option>
+                  <option value="20">20 rows</option>
+                  <option value="50">50 rows</option>
+                </select>
+              }
+            />
+          </SettingSection>
 
+          {/* 4. Diagnostics */}
+          <SettingSection title="Diagnostics & Server Status" icon={Radio}
+            iconColor="bg-emerald-50 dark:bg-emerald-950/20 text-emerald-500" delay={390}>
             <div className="flex justify-between items-center">
-              <div>
-                <span className="block text-sm font-semibold text-slate-900 dark:text-white">Default Page Limits</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400">Select rows loaded by default on database listings</span>
-              </div>
-              <select
-                value={defaultRows}
-                onChange={(e) => setDefaultRows(e.target.value)}
-                className="px-2.5 py-1.5 rounded-lg border bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-violet-500 transition"
-              >
-                <option value="5">5 rows</option>
-                <option value="10">10 rows</option>
-                <option value="20">20 rows</option>
-                <option value="50">50 rows</option>
-              </select>
-            </div>
-          </div>
-
-          {/* 4. Diagnostics Network Status */}
-          <div className="glass-panel p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-850/40 space-y-4">
-            <div className="flex justify-between items-start">
-              <h3 className="text-base font-bold text-slate-950 dark:text-white flex items-center space-x-2">
-                <Radio className="w-5 h-5 text-emerald-500" />
-                <span>Diagnostics & Server Status</span>
-              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Real-time API health check and latency monitor</p>
               <button
+                id="run-diagnostics"
                 type="button"
                 onClick={runDiagnostics}
                 disabled={pinging}
-                className="flex items-center text-xs font-bold text-violet-600 dark:text-violet-400 hover:text-violet-750 transition disabled:opacity-50 cursor-pointer"
+                className="flex items-center gap-1.5 text-xs font-bold text-violet-600 dark:text-violet-400 hover:text-violet-700 transition-colors disabled:opacity-50 cursor-pointer"
               >
-                {pinging && <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" />}
-                <span>Test Connection</span>
+                {pinging
+                  ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  : <RefreshCw className="w-3.5 h-3.5" />
+                }
+                {pinging ? 'Testing…' : 'Test Connection'}
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              {/* Latency */}
-              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/50 dark:border-slate-800 space-y-1">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">API Latency</span>
-                <span className="text-sm font-bold text-slate-900 dark:text-white flex items-center">
-                  <Wifi className="w-4 h-4 text-emerald-500 mr-1.5" />
-                  {latency ? `${latency} ms` : 'Offline / Error'}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 space-y-1.5">
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">API Latency</span>
+                <span className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                  <Wifi className="w-4 h-4 text-emerald-500" />
+                  {pinging ? '…' : latency ? `${latency} ms` : 'Offline'}
                 </span>
+                {latency && (
+                  <div className="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                    <div className={`h-full rounded-full transition-all duration-500 ${latency < 100 ? 'bg-emerald-500' : latency < 300 ? 'bg-amber-500' : 'bg-rose-500'}`}
+                      style={{ width: `${Math.min((latency / 500) * 100, 100)}%` }} />
+                  </div>
+                )}
               </div>
 
-              {/* Health status */}
-              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/50 dark:border-slate-800 space-y-1">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Server Health</span>
-                <span className="text-sm font-bold text-slate-900 dark:text-white flex items-center">
-                  <HeartHandshake className="w-4 h-4 text-emerald-500 mr-1.5" />
-                  {healthStatus === 'OK' ? 'Healthy (OK)' : healthStatus === 'Error' ? 'Unhealthy' : 'Checking...'}
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 space-y-1.5">
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Server Health</span>
+                <span className={`text-sm font-bold flex items-center gap-1.5 ${
+                  healthStatus === 'OK' ? 'text-emerald-600 dark:text-emerald-400'
+                  : healthStatus === 'Error' ? 'text-rose-500'
+                  : 'text-slate-900 dark:text-white'
+                }`}>
+                  {healthStatus === 'OK'
+                    ? <><HeartHandshake className="w-4 h-4" /> Healthy</>
+                    : healthStatus === 'Error'
+                    ? <><Server className="w-4 h-4" /> Unhealthy</>
+                    : <><Activity className="w-4 h-4 animate-pulse" /> Checking…</>
+                  }
+                </span>
+                <span className={`text-[10px] font-semibold ${
+                  healthStatus === 'OK' ? 'text-emerald-500' : healthStatus === 'Error' ? 'text-rose-400' : 'text-slate-400'
+                }`}>
+                  {healthStatus === 'OK' ? 'All systems operational' : healthStatus === 'Error' ? 'Connection failed' : 'Running diagnostics…'}
                 </span>
               </div>
             </div>
-          </div>
+          </SettingSection>
 
-          {/* Form Submissions */}
-          <div className="flex justify-end pt-4 border-t border-slate-150 dark:border-slate-800">
+          {/* Save */}
+          <div className="flex justify-end pt-2 animate-fade-up delay-500">
             <button
+              id="save-settings"
               onClick={handleSaveSettings}
-              className="flex items-center px-5 py-2.5 bg-violet-600 hover:bg-violet-700 text-white font-bold rounded-xl shadow-md transition cursor-pointer text-sm"
+              className="flex items-center gap-2 px-6 py-2.5 premium-gradient-btn text-white font-bold rounded-xl cursor-pointer text-sm"
             >
+              <CheckCircle2 className="h-4 w-4" />
               Save Preferences
             </button>
           </div>
-
         </div>
-
       </div>
     </div>
   );
