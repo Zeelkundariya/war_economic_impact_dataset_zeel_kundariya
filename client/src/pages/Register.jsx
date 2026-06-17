@@ -6,6 +6,28 @@ import * as Yup from 'yup';
 import { registerUser, clearAuthError } from '../store/slices/authSlice';
 import { User, Mail, Lock, Shield, Loader2, AlertCircle, Eye, EyeOff, ArrowRight, CheckCircle2 } from 'lucide-react';
 
+const FieldInput = ({ id, name, type, placeholder, icon: Icon, extraRight, formik }) => (
+  <div className="relative">
+    <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500 pointer-events-none">
+      <Icon className="h-4 w-4" />
+    </span>
+    <input
+      id={id}
+      name={name}
+      type={type}
+      autoComplete={id === 'name' ? 'name' : id === 'email' ? 'email' : 'new-password'}
+      onChange={formik.handleChange}
+      onBlur={formik.handleBlur}
+      value={formik.values[name]}
+      placeholder={placeholder}
+      className={`block w-full pl-10 ${extraRight ? 'pr-11' : 'pr-4'} py-3 rounded-xl dark-input text-sm ${
+        formik.touched[name] && formik.errors[name] ? 'border-rose-500/60' : ''
+      }`}
+    />
+    {extraRight}
+  </div>
+);
+
 const Register = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -51,28 +73,6 @@ const Register = () => {
   const strengthColors = ['', 'bg-rose-500', 'bg-amber-400', 'bg-emerald-500'];
   const strengthLabels = ['', 'Weak', 'Moderate', 'Strong'];
 
-  const FieldInput = ({ id, name, type, placeholder, icon: Icon, extraRight }) => (
-    <div className="relative">
-      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500 pointer-events-none">
-        <Icon className="h-4 w-4" />
-      </span>
-      <input
-        id={id}
-        name={name}
-        type={type}
-        autoComplete={id === 'name' ? 'name' : id === 'email' ? 'email' : 'new-password'}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values[name]}
-        placeholder={placeholder}
-        className={`block w-full pl-10 ${extraRight ? 'pr-11' : 'pr-4'} py-3 rounded-xl dark-input text-sm ${
-          formik.touched[name] && formik.errors[name] ? 'border-rose-500/60' : ''
-        }`}
-      />
-      {extraRight}
-    </div>
-  );
-
   return (
     <div className="min-h-screen flex bg-[#030712] text-white relative overflow-hidden">
 
@@ -117,7 +117,7 @@ const Register = () => {
               {/* Name */}
               <div className="animate-fade-up delay-75">
                 <label htmlFor="name" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Full Name</label>
-                <FieldInput id="name" name="name" type="text" placeholder="Your full name" icon={User} />
+                <FieldInput id="name" name="name" type="text" placeholder="Your full name" icon={User} formik={formik} />
                 {formik.touched.name && formik.errors.name && (
                   <p className="text-xs text-rose-400 mt-1.5 font-medium flex items-center gap-1"><AlertCircle className="h-3 w-3" />{formik.errors.name}</p>
                 )}
@@ -126,7 +126,7 @@ const Register = () => {
               {/* Email */}
               <div className="animate-fade-up delay-100">
                 <label htmlFor="email" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Email Address</label>
-                <FieldInput id="email" name="email" type="email" placeholder="name@domain.com" icon={Mail} />
+                <FieldInput id="email" name="email" type="email" placeholder="name@domain.com" icon={Mail} formik={formik} />
                 {formik.touched.email && formik.errors.email && (
                   <p className="text-xs text-rose-400 mt-1.5 font-medium flex items-center gap-1"><AlertCircle className="h-3 w-3" />{formik.errors.email}</p>
                 )}
@@ -140,6 +140,7 @@ const Register = () => {
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Create a strong password"
                   icon={Lock}
+                  formik={formik}
                   extraRight={
                     <button type="button" tabIndex={-1} onClick={() => setShowPassword(!showPassword)}
                       className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-500 hover:text-slate-300 transition-colors focus:outline-none cursor-pointer">
@@ -173,6 +174,7 @@ const Register = () => {
                   type={showConfirmPassword ? 'text' : 'password'}
                   placeholder="Re-enter your password"
                   icon={Lock}
+                  formik={formik}
                   extraRight={
                     <button type="button" tabIndex={-1} onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-500 hover:text-slate-300 transition-colors focus:outline-none cursor-pointer">
