@@ -10,6 +10,7 @@ import ToastNotification from './components/ToastNotification';
 import { Shield } from 'lucide-react';
 
 // Lazy-loaded pages
+const Landing        = lazy(() => import('./pages/Landing'));
 const Login          = lazy(() => import('./pages/Login'));
 const Register       = lazy(() => import('./pages/Register'));
 const Dashboard      = lazy(() => import('./pages/Dashboard'));
@@ -85,7 +86,7 @@ function App() {
             </Route>
 
             {/* Root redirect & 404 */}
-            <Route path="/"  element={<Navigate to="/dashboard" replace />} />
+            <Route path="/"  element={<Landing />} />
             <Route path="*"  element={<NotFound />} />
           </Routes>
         </Suspense>
