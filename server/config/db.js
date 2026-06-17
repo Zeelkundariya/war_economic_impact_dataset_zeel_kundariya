@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
 
+const maskUri = (uri) => {
+  if (!uri) return 'undefined';
+  return uri.replace(/:([^:@]+)@/, ':******@');
+};
+
 const connectDB = async () => {
   const dbUri = process.env.MONGO_URI || process.env.MONGO_URL;
 
@@ -12,6 +17,8 @@ const connectDB = async () => {
     console.error('================================================================');
     process.exit(1);
   }
+
+  console.log(`Connecting to DB: ${maskUri(dbUri)}`);
 
   try {
     const conn = await mongoose.connect(dbUri);
