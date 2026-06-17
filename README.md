@@ -167,9 +167,21 @@ Ensure local MongoDB server is installed.
    NODE_ENV=development
    ```
 3. Import seed data (populated with mock database records):
-   ```bash
-   npm run data:import
-   ```
+   * **Local MongoDB**:
+     ```bash
+     npm run data:import
+     ```
+   * **MongoDB Atlas (Cloud)**:
+     If seeding a cloud Atlas cluster from a local terminal, set your connection string as `MONGO_URI`. If your local environment encounters SSL/TLS certificate validation warnings (such as `UNABLE_TO_VERIFY_LEAF_SIGNATURE` due to local proxies or VPNs), execute the import command with rejected authorization disabled:
+     * **PowerShell**:
+       ```powershell
+       $env:NODE_TLS_REJECT_UNAUTHORIZED="0"; $env:MONGO_URI="your-mongodb-atlas-connection-string"; npm run data:import
+       ```
+     * **Bash/macOS/Linux**:
+       ```bash
+       NODE_TLS_REJECT_UNAUTHORIZED="0" MONGO_URI="your-mongodb-atlas-connection-string" npm run data:import
+       ```
+
 4. Start the backend:
    ```bash
    npm run dev
