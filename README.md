@@ -24,11 +24,6 @@
 
 </div>
 
-<div align="center">
-
-![Dashboard Preview](dashboard_preview.png)
-
-</div>
 
 ---
 
