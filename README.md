@@ -80,6 +80,34 @@ war_economic_impact/
 
 ---
 
+## 🏗️ Backend Architecture
+
+The server is built on a scalable Node.js & Express foundation following the MVC (Model-View-Controller) design pattern:
+
+-   **Routing Layer (`routes/`)**: Receives HTTP requests, runs them through authentication guards and rate limiters, and forwards them to the appropriate controller.
+-   **Controller Layer (`controllers/`)**: The "brain" of the backend. Contains business logic to process requests, perform calculations or validations, and interact with the database models. 
+-   **Model Layer (`models/`)**: Mongoose schemas that strictly define the structure, data types, and required fields for the MongoDB database.
+-   **Middleware Layer (`middlewares/`)**: Contains custom interceptors, such as JWT authentication verification to protect private routes, and memory-based rate limiters to prevent API abuse or DDoS attacks.
+
+---
+
+## 🗄️ Database Schema & Stored Data
+
+The MongoDB database securely stores the following data models:
+
+1.  **Users (`userModel.js`)**: 
+    *   Stores analyst and administrator accounts.
+    *   Fields include securely hashed passwords (via bcrypt) and Role-based tags (`user` vs `admin`).
+2.  **Conflicts Dataset (`conflictModel.js`)**: 
+    *   The primary engine of the application containing deep macroeconomic records of geopolitical crises.
+    *   **Core Info:** Conflict Name, Type, Region, Primary Country, Start/End Year, and Status.
+    *   **Economic Impact:** GDP Change Percentage, Inflation Rate Percentage, and total Cost of War (USD).
+    *   **Societal Impact:** Poverty Rates (Standard and Extreme), Food Insecurity %, and Unemployment metrics.
+    *   **Black Market & Sectors:** Most Affected Sector, Black Market Activity Level, Traded Goods, and Currency Gaps.
+    *   **Reconstruction:** Estimated Reconstruction Cost (USD) and shifts in the Informal Economy Size.
+
+---
+
 ## ⚙️ API Overview
 
 ### 🔐 Authentication & Session
